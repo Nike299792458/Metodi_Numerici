@@ -5,19 +5,26 @@ Osservabili, heathbath, metropolis, microcanonico
 notazione= stvol= spacetime volume
 =#
 
+
+function init_lattice(L::Int)
+    lattice = 
+    return lattice
+end
+
 #O1 = (1/stvol) Σ_n (hatm^2 ϕ_n^2)
 function O1(stvol::Int, mhat::Float64, lattice::Array{Float64})
-    ris= sum(mhat^2*lattice^2)/stvol
+   ris= sum(mhat*mhat*(lattice .^2))
     return ris
 end
+
 #O2 = (1/stvol) Σ_r  Σ_{mu>0} (ϕ(n+μ)-ϕ_n)^2
-function O2(stvol::Int, mhat::Float64, lattice::Array{Float64})
-    ris= sum(mhat^2*lattice*circshift(lattice,1))/stvol
+function O2(stvol::Int, mhat::Int, Nt::Int, lattice::Array{Int})
+    ris= mhat*mhat*dot(lattice,circshift(lattice,-Nt))/stvol
     return ris
 end
 #// O3 = (1/stvol) Σ_n (ϕ_(n+0)-ϕ_n)^2
-function O3(stvol::Int, mhat::Float64, Nt::Int, lattice::Array{Float64})
-    ris= sum(mhat^2*lattice*circshift(lattice,Nt))/stvol
+function O3(stvol::Int, mhat::Int, lattice::Array{Int})
+    ris= mhat*mhat*dot(lattice,circshift(lattice,-1))/stvol
     return ris
 end
 
