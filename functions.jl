@@ -12,19 +12,24 @@ function init_lattice(L::Int)
 end
 
 #O1 = (1/stvol) Σ_n (hatm^2 ϕ_n^2)
-function O1(stvol::Int, mhat::Float64, lattice::Array{Float64})
-   ris= sum(mhat*mhat*(lattice .^2))
+function O1(stvol::Int, mhat::Int, lattice::Array{Float64})
+   ris= sum(mhat*mhat*(lattice .^2))/stvol
     return ris
 end
 
 #O2 = (1/stvol) Σ_r  Σ_{mu>0} (ϕ(n+μ)-ϕ_n)^2
-function O2(stvol::Int, mhat::Int, Nt::Int, lattice::Array{Int})
+function O2(stvol::Int, mhat::Int, Nt::Int, lattice::Array{Float64})
     ris= mhat*mhat*dot(lattice,circshift(lattice,-Nt))/stvol
     return ris
 end
 #// O3 = (1/stvol) Σ_n (ϕ_(n+0)-ϕ_n)^2
-function O3(stvol::Int, mhat::Int, lattice::Array{Int})
-    ris= mhat*mhat*dot(lattice,circshift(lattice,-1))/stvol
+function O3(stvol::Int, mhat::Int, lattice::Array{Float64})
+    rows = [collect(row) for row in eachcol(lattice)]
+    a=0
+    for i = 1:size(lattice,1)
+    a+=dot(rows[i], circshift(rows[i],-1))
+    end
+    ris= mhat*mhat*a/stvol
     return ris
 end
 
