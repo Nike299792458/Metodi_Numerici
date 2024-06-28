@@ -15,4 +15,20 @@ for i = 1:3
     somma+=dot(array_righe[i], circshift(array_righe[i],-1))
 end
 println(somma)
+STDIM= 3
+Nt=3
+Ns=2
+stvolume=Nt
+    for i in 1:STDIM
+        stvolume=stvolume*Ns
+        println(stvolume)
+    end
+println(stvolume)
 
+timestamps=[4,5,6,7,8,10]
+
+for i in timestamps
+    # initializing...
+    Nt=i
+    println(Nt)
+end

@@ -4,21 +4,20 @@ using Combinatorics, LinearAlgebra, Random
 Osservabili, heathbath, metropolis, microcanonico
 notazione= stvol= spacetime volume
 =#
-STDIM = 2
+STDIM = 2 #spacetime dimensionality
 
-
-#O1 = (1/stvol) Σ_n (hatm^2 ϕ_n^2)
+#O1 = 1/(Nt*Ns^{STDIM-1}) Σ_n (hatm^2 ϕ_n^2)
 function O1(stvol::Int, mhat::Int, lattice::Array{Float64})
    ris= sum(mhat*mhat*(lattice .^2))/stvol
     return ris
 end
 
-#O2 = (1/stvol) Σ_r  Σ_{mu>0} (ϕ(n+μ)-ϕ_n)^2
+#O2 = 1/(Nt*Ns^{STDIM-1}) Σ_r  Σ_{mu>0} (ϕ(n+μ)-ϕ_n)^2
 function O2(stvol::Int, mhat::Int, Nt::Int, lattice::Array{Float64})
     ris= mhat*mhat*dot(lattice,circshift(lattice,-Nt))/stvol
     return ris
 end
-#// O3 = (1/stvol) Σ_n (ϕ_(n+0)-ϕ_n)^2
+#// O3 = 1/(Nt*Ns^{STDIM-1}) Σ_n (ϕ_(n+0)-ϕ_n)^2
 function O3(stvol::Int, mhat::Int, lattice::Array{Float64})
     rows = [collect(row) for row in eachcol(lattice)]
     a=0
@@ -28,35 +27,17 @@ function O3(stvol::Int, mhat::Int, lattice::Array{Float64})
     ris= mhat*mhat*a/stvol
     return ris
 end
-#=
-function metropolis!(lattice::Array{Float64}, r::Int, Δ::Int, η::Float64)
-    ΔS = Δ*(2*rand(Float64)-1)
-    trial = (lattice[r]+ΔS)
-    Eold = 
-    Enew = 
 
-    if Enew < Eold
-        lattice[r] = trial
-        return 1
-    elseif rand(Float64) < exp(-(Enew-Eold))
-        lattice[r] = trial
-        return 1
-    end
-
-    return 0
-end
-=#
-function heathbath!(lattice::Array{Float64}, r::Int, eta::Float64)
-    std = 1.0/sqrt(eta + 2.0/eta)
-    avg = (circshift(lattice, 1)[r]+circshift(lattice, -1)[r])/(mhat*mhat+2.0*STDIM)
-    
+function heathbath!(lattice::Array{Float64}, r::Int, mhat::Int, Nt::Int)
+    std = 1.0/sqrt(mhat*mhat+2.0*STDIM)
+    avg = (circshift(lattice, 1)[r]+circshift(lattice, -1)[r]+circshift(lattice, Nt)[r]+circshift(lattice, -Nt)[r])/(mhat*mhat+2.0*STDIM)
     lattice[r] = avg+std*randn()
 
     return 1
 end
 
-function overrelax!(lattice::Array{Float64}, r::Int, eta::Float64)
-    avg = (circshift(lattice, 1)[r]+circshift(lattice, -1)[r])/(mhat*mhat+2.0*STDIM)
+function overrelax!(lattice::Array{Float64}, r::Int, mhat::Int, Nt::Int)
+    avg = (circshift(lattice, 1)[r]+circshift(lattice, -1)[r]+circshift(lattice, Nt)[r]+circshift(lattice, -Nt)[r])/(mhat*mhat+2.0*STDIM)
     new = 2.0*avg-lattice[r]
     lattice[r] = new
 
