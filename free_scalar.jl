@@ -28,28 +28,29 @@ function O3(stvol::Int, mhat::Int, lattice::Array{Float64})
     return ris
 end
 #=
-Controlla assolutamente se Σ_n fa quello che deve se i moduli sono messi bene se effettivamente
 Ns è il numero di colonne (lunghezza riga ) e Nt il numero di righe (lunghezza colonne)
+per passare dal singolo indice r ai due indici (i,j):
+j= celing-division tra 1 e Nt e i=modulo in base Nt di r
 =#
 
-function Σ_n(lattice::Array{Float6}, r::Int)
-    i=mod1(r,Ns)
-    j=mod1(r,Nt)
-    lattice[mod1(i+1, Ns), j] + lattice[mod1(i-1, Ns), j] +
-                   lattice[i, mod1(j+1, Nt)] + lattice[i, mod1(j-1, Nt)]
+function Σ_n(lattice::Array{Float64}, r::Int, Nt::Int, Ns::Int)
+    i=mod1(r,Nt)
+    j=cld(r,Nt)
+    lattice[mod1(i+1, Nt), j] + lattice[mod1(i-1, Nt), j] +
+                   lattice[i, mod1(j+1, Ns)] + lattice[i, mod1(j-1, Ns)]
+end
     
 
-function heathbath!(lattice::Array{Float64}, r::Int, mhat::Int, Nt::Int)
+function heathbath!(lattice::Array{Float64}, r::Int, mhat::Int, Nt::Int, Ns::Int)
     std = 1.0/sqrt(mhat*mhat+2.0*STDIM)
-
-    avg = Σ_n[r]/(mhat*mhat+2.0*STDIM)
+    avg = Σ_n(lattice, r, Nt, Ns)/(mhat*mhat+2.0*STDIM)
     lattice[r] = avg+std*randn()
 
     return 1
 end
 
-function overrelax!(lattice::Array{Float64}, r::Int, mhat::Int, Nt::Int)
-    avg = Σ_n[r]/(mhat*mhat+2.0*STDIM)
+function overrelax!(lattice::Array{Float64}, r::Int, mhat::Int, Nt::Int, Ns::Int)
+    avg =  Σ_n(lattice, r, Nt, Ns)/(mhat*mhat+2.0*STDIM)
     new = 2.0*avg-lattice[r]
     lattice[r] = new
 

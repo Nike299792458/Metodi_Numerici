@@ -1,8 +1,12 @@
 using CSV, DataFrames, Dates
-include("functions.jl")
+include("free_scalar.jl")
 
 
-matrix = ([1.0 2.0 3.0; 4.0 5.0 6.0; 7.0 8.0 9.0])
+
+matrix = ([1.0 1.0 1.0 1.0; 2.0 2.0 2.0 2.0; 3.0 3.0 3.0 3.0])
+Nt= size(matrix, 2)
+
+Ns= size(matrix,1)
 #matrix= reshape(matrix, 9, 1)
 show(matrix)
 #nuova=show(circshift(matrix ,-1 ))
@@ -17,7 +21,7 @@ end
 println(somma)
 STDIM= 3
 Nt=3
-Ns=2
+Ns=4
 stvolume=Nt
     for i in 1:STDIM
         stvolume=stvolume*Ns
@@ -32,3 +36,5 @@ for i in timestamps
     Nt=i
     println(Nt)
 end
+
+Σ_n(matrix, 1)

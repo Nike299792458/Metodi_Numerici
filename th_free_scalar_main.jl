@@ -1,5 +1,5 @@
 using ArgParse, Dates, DelimitedFiles, Random, Printf, LinearAlgebra
-include("functions.jl")
+include("free_scalar.jl")
 
 function parse_cmd()
     s = ArgParseSettings()
@@ -73,9 +73,9 @@ function main()
         datafile = open(fr, "a")
         for iter in 1:sample
             for r in LinearIndices(lattice)
-                acc+=heathbath!(lattice, r, mhat, Nt )
+                acc+=heathbath!(lattice, r, mhat, Nt, Ns)
                 for _ in 1:orsteps
-                    acc+=overrelax!(lattice, r, mhat, Nt)
+                    acc+=overrelax!(lattice, r, mhat, Nt, Ns)
                 end
             end
         
