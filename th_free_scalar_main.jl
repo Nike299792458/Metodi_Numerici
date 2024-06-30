@@ -59,7 +59,7 @@ function main()
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf "free_scalar_th_sample=%.1eNt=%2.2iNs=%2.2i.txt" sample Nt Ns
+        fname = @sprintf "free_scalar_th_sample=%.1eratio=%.iNt=%2.2iNs=%2.2i.txt" sample ratio Nt Ns
         fr = joinpath([path, fname])
         if !isfile(fr)
             touch(fr)

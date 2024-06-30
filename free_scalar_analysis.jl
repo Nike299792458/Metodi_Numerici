@@ -1,4 +1,4 @@
-using ArgParse, DelimitedFiles, LinearAlgebra, Plots, Printf, Statistics
+using ArgParse, DelimitedFiles, LinearAlgebra, Printf, Statistics
 include("free_scalar.jl")
 
 
@@ -7,7 +7,11 @@ function parse_cmd()
 
     @add_arg_table s begin
         "sample"
-            help = "Number of steps in the simulation"
+            help = "number of steps in the simulation"
+            required = true
+            arg_type = Int
+        "ratio"
+            help = "ratio between spatial and temporal dimension"
             required = true
             arg_type = Int
         "therm"
@@ -17,19 +21,10 @@ function parse_cmd()
         "blocksize"
             help = "the number of points in a block"
             required = true
-            arg_type = Int
-        "Nt"
-            help = "Temporal dimension of the lattice"
-            required = true
-            arg_type = Int       
+            arg_type = Int    
         "--path", "-p"
             help = "the path where files are stored"
             default = joinpath(["..", "simulations_c"])
-            required = false
-            arg_type = String
-        "--name", "-n"
-            help = "the name of data file"
-            default = "data.txt"
             required = false
             arg_type = String
     end
@@ -41,11 +36,12 @@ function main()
     path = parsed_args["path"]
     blocksize = parsed_args["blocksize"]
     therm = parsed_args["therm"]
+    ratio = parsed_args["ratio"]
     sample = parsed_args["sample"]
-    dfname = parsed_args["name"]
-    startp = @sprintf "free_scalar_th_sample=%.1e" sample
+    dfname = "data_ratio=$ratio"
+    startp = @sprintf "free_scalar_th_sample=%.1eratio=%.i" sample ratio
     paths = filter(startswith(startp), readdir(path))
-    size_list = []
+    temporal_dim = []
     O1 = []
     ϵ_norm = []
     O1v = []
@@ -63,23 +59,19 @@ function main()
         ϵ_norm_j = (O1_j+O2_j-O3_j)/2
         
         
-        push!(size_list, Nt)
+        push!(temporal_dim, Nt)
         push!(O1, mean(O1_j))
         push!(ϵ_norm, mean(ϵ_norm_j))
 
-        push!(O1v, std(O1_j, corrected = false).*sqrt(length(O1_j))-1)
-        push!(ϵ_normv, std(ϵ_norm_j, corrected = false).*sqrt(length(O1_j)-1))
+        push!(O1v, std(O1_j, corrected = false).*sqrt(length(O1_j)-1))
+        push!(ϵ_normv, std(ϵ_norm_j, corrected = false).*sqrt(length(ϵ_norm_j)-1))
     
     end
 
     w = open(joinpath([path, dfname]), "w") do io
-        writedlm(io, ["size_list" "O1" "O1v" "ϵ_norm" "ϵ_normv"], ",")
-        writedlm(io, [size_list O1 O1v ϵ_norm ϵ_normv], ",")
+        writedlm(io, ["temporal_dim" "O1" "O1v" "ϵ_norm" "ϵ_normv"], ",")
+        writedlm(io, [temporal_dim O1 O1v ϵ_norm ϵ_normv], ",")
     end
     println("Done! Data stored in $(joinpath([path, dfname]))")
 end
-
 main()
-#=
-stampa qualcosa ma c'è da capire cosa 
-e perché sono 4 righe non so come fa le medie=#
