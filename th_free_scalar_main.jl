@@ -43,7 +43,7 @@ function main()
         # initializing...
         Nt=i
         Ns=ratio*Nt
-        lattice = zeros(Float64, Nt, Ns)
+        lattice = zeros(Float64, Nt,Ns)#va cambiato in un solo array
         acc=0
         # simulation parameters
         orsteps = 5
@@ -52,8 +52,6 @@ function main()
         for i in 1:(STDIM-1)
             stvol=stvol*Ns
         end
-
-
 
         # files management
         if !isdir(path)
@@ -80,9 +78,9 @@ function main()
             end
         
             if iter%measevery == 0
-                obs1 = O1(stvol,mhat,lattice)
-                obs2 = O2(stvol,mhat,Nt,lattice)
-                obs3 = O3(stvol,mhat,lattice)
+                obs1 = O1(stvol, mhat,lattice)
+                obs2 = O2(stvol, Nt,lattice)
+                obs3 = O3(stvol,lattice)
                 writedlm(datafile, [obs1 obs2 obs3], " ")
             end
             
