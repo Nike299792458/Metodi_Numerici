@@ -14,6 +14,7 @@ end
 
 #O2 = 1/(Nt*Ns^{STDIM-1}) Σ_r  Σ_{mu>0} (ϕ(n+μ)-ϕ_n)^2
 function O2(stvol::Int, Nt::Int, lattice::Array{Float64})
+    lattice=reshape(lattice, :)
     ris= dot(circshift(lattice,-Nt)-lattice,circshift(lattice,-Nt)-lattice,)/stvol
     return ris
 end

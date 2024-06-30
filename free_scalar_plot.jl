@@ -1,8 +1,8 @@
-using Plots, LinearAlgebra, Statistics
+using Plots, LinearAlgebra, Statistics, Printf
 
 
 default(fontfamily = "Computer Modern",
-background_color = :white,
+background_color = :transparent,
 foreground_color = :black,
 margin=5Plots.mm
 )
@@ -10,7 +10,7 @@ margin=5Plots.mm
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
 sample = 100000
-ratio=8
+ratio=4
 fname = @sprintf "data_ratio=4" 
 
 
