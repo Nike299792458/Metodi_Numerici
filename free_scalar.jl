@@ -12,7 +12,7 @@ function O1(stvol::Int, mhat::Int, lattice::Array{Float64})
     return ris
 end
 
-#O2 = 1/(Nt*Ns^{STDIM-1}) Σ_r  Σ_{mu>0} (ϕ(n+μ)-ϕ_n)^2
+#O2 = 1/(Nt*Ns^{STDIM-1}) Σ_n Σ_{mu>0} (ϕ(n+μ)-ϕ_n)^2
 function O2(stvol::Int, Nt::Int, lattice::Array{Float64})
     lattice=reshape(lattice, :)
     ris= dot(circshift(lattice,-Nt)-lattice,circshift(lattice,-Nt)-lattice,)/stvol
@@ -22,8 +22,8 @@ end
 function O3(stvol::Int, lattice::Array{Float64})
     rows = [collect(row) for row in eachcol(lattice)]
     a=0
-    for i = 1:size(lattice,1)
-    a+=dot(circshift(rows[i],-1)-rows[1],circshift(rows[i],-1)-rows[1])
+    for i in 1:size(lattice,1)
+    a+=dot(circshift(rows[i],-1)-rows[i],circshift(rows[i],-1)-rows[i])
     end
     ris= a/stvol
     return ris

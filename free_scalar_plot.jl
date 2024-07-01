@@ -9,11 +9,11 @@ margin=5Plots.mm
 
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
-sample = 100000
 ratio=4
+
+
+
 fname = @sprintf "data_ratio=4" 
-
-
 lines = readlines("data_ratio=4")
 lines=lines[2:end]
 Nt = [parse(Float64, split(line, ',')[1]) for line in lines]
@@ -23,5 +23,4 @@ Nt = [parse(Float64, split(line, ',')[1]) for line in lines]
 
 x=Nt .^(-2)
 scatter(x, ϵ_norm, yerr =ϵ_normv, title="Scatter Plot", xlabel="x", ylabel="y", label="Dati")
-
 

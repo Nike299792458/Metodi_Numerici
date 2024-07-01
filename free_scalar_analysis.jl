@@ -56,7 +56,7 @@ function main()
         O1_j = JackKnife(w[1][therm:end,1], blocksize)
         O2_j = JackKnife(w[1][therm:end,2], blocksize)
         O3_j = JackKnife(w[1][therm:end,3], blocksize)
-        ϵ_norm_j = (O1_j+O2_j-O3_j)/2
+        ϵ_norm_j =(O1_j+O2_j-O3_j)/2
         
         
         push!(temporal_dim, Nt)

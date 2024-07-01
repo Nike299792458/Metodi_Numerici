@@ -52,7 +52,6 @@ function main()
         for i in 1:(STDIM-1)
             stvol=stvol*Ns
         end
-
         # files management
         if !isdir(path)
             mkpath(path)
