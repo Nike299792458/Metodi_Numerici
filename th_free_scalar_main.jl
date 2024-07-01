@@ -13,10 +13,12 @@ function parse_cmd()
             help = "Number of steps in the simulation"
             required = true
             arg_type = Int
+        #=
         "mhat"
             help = "Mass in lattice units, a*m"
             required = true
             arg_type = Int
+        =#
         "--path", "-p"
             help = "The path where files are stored"
             default = joinpath(["..", "simulations_c"])
@@ -31,7 +33,7 @@ function main()
     parsed_args = parse_cmd()
     ratio = parsed_args["ratio"]
     sample = parsed_args["sample"]
-    mhat = parsed_args["mhat"]
+    #mhat = parsed_args["mhat"]
     path = parsed_args["path"]
    
 
@@ -45,6 +47,7 @@ function main()
         Ns=ratio*Nt
         lattice = zeros(Float64, Nt,Ns)#va cambiato in un solo array
         acc=0
+        mhat=1/Nt
         # simulation parameters
         orsteps = 5
         measevery = 1

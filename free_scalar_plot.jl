@@ -22,5 +22,5 @@ Nt = [parse(Float64, split(line, ',')[1]) for line in lines]
 
 
 x=Nt .^(-2)
-scatter(x, ϵ_norm, yerr =ϵ_normv, title="Scatter Plot", xlabel="x", ylabel="y", label="Dati")
+scatter(x, 2*ϵ_norm, yerr =ϵ_normv, title="Scatter Plot", xlabel="x", ylabel="y", label="Dati")
 

@@ -7,7 +7,7 @@ notazione= stvol= spacetime volume
 STDIM = 2 #spacetime dimensionality
 
 #O1 = 1/(Nt*Ns^{STDIM-1}) Σ_n (mhat^2 ϕ_n^2)
-function O1(stvol::Int, mhat::Int, lattice::Array{Float64})
+function O1(stvol::Int, mhat::Float64, lattice::Array{Float64})
    ris= mhat*mhat*dot(lattice,lattice)/stvol
     return ris
 end
@@ -42,7 +42,7 @@ function Σ_n(lattice::Array{Float64}, r::Int, Nt::Int, Ns::Int)
 end
     
 
-function heathbath!(lattice::Array{Float64}, r::Int, mhat::Int, Nt::Int, Ns::Int)
+function heathbath!(lattice::Array{Float64}, r::Int, mhat::Float64, Nt::Int, Ns::Int)
     std = 1.0/sqrt(mhat*mhat+2.0*STDIM)
     avg = Σ_n(lattice, r, Nt, Ns)/(mhat*mhat+2.0*STDIM)
     lattice[r] = avg+std*randn()
@@ -50,7 +50,7 @@ function heathbath!(lattice::Array{Float64}, r::Int, mhat::Int, Nt::Int, Ns::Int
     return 1
 end
 
-function overrelax!(lattice::Array{Float64}, r::Int, mhat::Int, Nt::Int, Ns::Int)
+function overrelax!(lattice::Array{Float64}, r::Int, mhat::Float64, Nt::Int, Ns::Int)
     avg =  Σ_n(lattice, r, Nt, Ns)/(mhat*mhat+2.0*STDIM)
     new = 2.0*avg-lattice[r]
     lattice[r] = new
