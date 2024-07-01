@@ -4,9 +4,12 @@ include("free_scalar.jl")
 
 
 matrix = ([1.0 2.0 3.0 4.0; 5.0 6.0 7.0 8.0; 9.0 10.0 11.0 12.0])
+Nt= size(matrix,1)
+matrix=reshape(matrix,:)
+circshift(matrix,-3)
 Ns= size(matrix, 2)
 
-Nt= size(matrix,1)
+
 
 
 show(matrix)
