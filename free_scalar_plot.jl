@@ -2,7 +2,7 @@ using Plots, LinearAlgebra, Statistics, Printf
 
 
 default(fontfamily = "Computer Modern",
-background_color = :transparent,
+background_color = :white,
 foreground_color = :black,
 margin=5Plots.mm
 )

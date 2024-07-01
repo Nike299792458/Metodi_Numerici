@@ -41,17 +41,22 @@ function main()
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i " sample ratio )
 
     timestamps=[4,5,6,7,8,10]
-    for i in timestamps
+    calcolato=false
+    for Nt in timestamps
         # initializing...
-        Nt=i
         Ns=ratio*Nt
-        lattice = zeros(Float64, Nt,Ns)#va cambiato in un solo array
-        acc=0
+        Nt_bar= 500
+        stvol_bar= Ns*Nt_bar
+        lattice = zeros(Float64, Nt,Ns)
         mhat=1/Nt
         # simulation parameters
         orsteps = 5
         measevery = 1
         stvol=Nt #stvol=Nt*Ns^{STDIM-1}
+        acc=0
+        O1_bar=0
+        O2_bar=0
+        O3_bar=0
         for i in 1:(STDIM-1)
             stvol=stvol*Ns
         end
@@ -78,11 +83,17 @@ function main()
                     acc+=overrelax!(lattice, r, mhat, Nt, Ns)
                 end
             end
-        
+             if !calcolato
+                O1_bar=O1(stvol_bar, mhat,lattice)
+                O2_bar=O2(stvol_bar, Nt_bar,lattice)
+                O3_bar=O3(stvol_bar,lattice)
+                println(Nt)
+                calcolato=true
+            end
             if iter%measevery == 0
-                obs1 = O1(stvol, mhat,lattice)
-                obs2 = O2(stvol, Nt,lattice)
-                obs3 = O3(stvol,lattice)
+                obs1 = O1(stvol, mhat,lattice)-O1_bar
+                obs2 = O2(stvol, Nt,lattice)-O2_bar
+                obs3 = O3(stvol,lattice)-O3_bar
                 writedlm(datafile, [obs1 obs2 obs3], " ")
             end
             
