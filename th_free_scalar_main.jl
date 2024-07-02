@@ -87,7 +87,6 @@ function main()
                 O1_bar=O1(stvol_bar, mhat,lattice)
                 O2_bar=O2(stvol_bar, Nt_bar,lattice)
                 O3_bar=O3(stvol_bar,lattice)
-                println(Nt)
                 calcolato=true
             end
             if iter%measevery == 0
