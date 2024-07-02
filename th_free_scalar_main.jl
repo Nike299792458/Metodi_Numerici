@@ -43,20 +43,19 @@ function main()
     timestamps=[4,5,6,7,8,10]
     calcolato=false
     for Nt in timestamps
-        # initializing...
         Ns=ratio*Nt
-        Nt_bar= 500
-        stvol_bar= Ns*Nt_bar
+        # initializing...
         lattice = zeros(Float64, Nt,Ns)
-        mhat=1/Nt
+        acc = 0
+        
+        
         # simulation parameters
         orsteps = 5
         measevery = 1
+        Nt_bar= 10000 
+        mhat=1/Nt
         stvol=Nt #stvol=Nt*Ns^{STDIM-1}
-        acc=0
-        O1_bar=0
-        O2_bar=0
-        O3_bar=0
+        stvol_bar= Ns*Nt_bar
         for i in 1:(STDIM-1)
             stvol=stvol*Ns
         end
@@ -83,16 +82,11 @@ function main()
                     acc+=overrelax!(lattice, r, mhat, Nt, Ns)
                 end
             end
-             if !calcolato
-                O1_bar=O1(stvol_bar, mhat,lattice)
-                O2_bar=O2(stvol_bar, Nt_bar,lattice)
-                O3_bar=O3(stvol_bar,lattice)
-                calcolato=true
-            end
+
             if iter%measevery == 0
-                obs1 = O1(stvol, mhat,lattice)-O1_bar
-                obs2 = O2(stvol, Nt,lattice)-O2_bar
-                obs3 = O3(stvol,lattice)-O3_bar
+                obs1 = O1(stvol, mhat,lattice)-O1(stvol_bar, mhat,lattice)
+                obs2 = O2(stvol, Nt,lattice)-O2(stvol_bar, Nt_bar,lattice)
+                obs3 = O3(stvol,lattice)-O3(stvol_bar,lattice)
                 writedlm(datafile, [obs1 obs2 obs3], " ")
             end
             
