@@ -41,7 +41,6 @@ function main()
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i " sample ratio )
 
     timestamps=[4,5,6,7,8,10]
-    calcolato=false
     for Nt in timestamps
         Ns=ratio*Nt
         # initializing...
