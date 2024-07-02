@@ -51,7 +51,7 @@ function main()
         
         # simulation parameters
         orsteps = 5
-        measevery = 1
+        measevery = 10
         Nt_bar= 10000 
         mhat=1/Nt
         stvol=Nt #stvol=Nt*Ns^{STDIM-1}
