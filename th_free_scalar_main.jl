@@ -13,12 +13,6 @@ function parse_cmd()
             help = "Number of steps in the simulation"
             required = true
             arg_type = Int
-        #=
-        "mhat"
-            help = "Mass in lattice units, a*m"
-            required = true
-            arg_type = Int
-        =#
         "--path", "-p"
             help = "The path where files are stored"
             default = joinpath(["..", "simulations_c"])
@@ -33,7 +27,6 @@ function main()
     parsed_args = parse_cmd()
     ratio = parsed_args["ratio"]
     sample = parsed_args["sample"]
-    #mhat = parsed_args["mhat"]
     path = parsed_args["path"]
    
 
@@ -45,31 +38,34 @@ function main()
         Ns=ratio*Nt
         # initializing...
         lattice = zeros(Float64, Nt,Ns)
-        acc = 0
-        
+        acc=0
         
         # simulation parameters
         orsteps = 5
         measevery = 10
-        Nt_bar= 10000 
-        mhat=1/Nt
+
+
+        mhat::Float64=(1.0)/Nt
+      
+      
         stvol=Nt #stvol=Nt*Ns^{STDIM-1}
-        stvol_bar= Ns*Nt_bar
         for i in 1:(STDIM-1)
             stvol=stvol*Ns
         end
+
+        
         # files management
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf "free_scalar_th_sample=%.1eratio=%.iNt=%2.2iNs=%2.2i.txt" sample ratio Nt Ns
+        fname = @sprintf("free_scalar_th_sample=%.1eratio=%.iNt=%2.2iNs=%2.2i.txt" , sample, ratio, Nt, Ns)
         fr = joinpath([path, fname])
         if !isfile(fr)
             touch(fr)
         end
         # writing header
         open(fr, "w") do infile
-            writedlm(infile, ["obs1" "obs2" "obs3"], " ")
+            writedlm(infile, ["obs1" "obs2" "obs3" "obs1_b" "obs2_b" "obs3_b"], " ")
         end
         
         start = now()
@@ -83,15 +79,57 @@ function main()
             end
 
             if iter%measevery == 0
-                obs1 = O1(stvol, mhat,lattice)-O1(stvol_bar, mhat,lattice)
-                obs2 = O2(stvol, Nt,lattice)-O2(stvol_bar, Nt_bar,lattice)
-                obs3 = O3(stvol,lattice)-O3(stvol_bar,lattice)
-                writedlm(datafile, [obs1 obs2 obs3], " ")
+                obs1 = O1(stvol, mhat,lattice)
+                obs2 = O2(stvol, Nt, lattice)
+                obs3 = O3(stvol, lattice)
+                writedlm(datafile, [obs1 obs2 obs3 missing missing missing], " ")
             end
             
         end
         close(datafile)
-        elapsed = Dates.canonicalize(Dates.round((now()-start), Dates.Second))
+
+    
+        Nt_b = 1000
+        Ns_b = ratio * Nt_b
+        stvol_b = Nt_b # stvol=Nt*Ns^{STDIM-1}
+        for i in 1:(STDIM-1)
+            stvol_b = stvol_b * Ns_b
+        end
+        lattice_b = zeros(Float64, Nt_b, Ns_b)
+        acc = 0
+
+        # Lettura del file esistente
+        data = readdlm(fr, ' ', header=true)
+        header = data[1]
+        rows = data[2]
+
+        # Aggiornamento delle righe con le nuove osservabili
+        row_idx = 1
+        for iter in 1:sample
+            for r in LinearIndices(lattice_b)
+                acc += heathbath!(lattice_b, r, mhat, Nt_b, Ns_b)
+                for _ in 1:orsteps
+                    acc += overrelax!(lattice_b, r, mhat, Nt_b, Ns_b)
+                end
+            end
+
+            if iter % measevery == 0
+                obs1_b = O1(stvol_b, mhat, lattice_b)
+                obs2_b = O2(stvol_b, Nt_b, lattice_b)
+                obs3_b = O3(stvol_b, lattice_b)
+                push!(rows[row_idx, 4:6], [obs1_b obs2_b obs3_b])
+                row_idx += 1
+            end
+        end
+
+        # Scrittura delle righe aggiornate nel file
+        open(fr, "w") do datafile
+            writedlm(datafile, header, " ")
+            for row in rows
+                writedlm(datafile, row, " ")
+            end
+        end
+        elapsed = Dates.canonicalize(Dates.round((now() - start), Dates.Second))
         println("\n$(round(now(), Dates.Second));\nNₜ = $Nt,Ns = $Ns, elapsed time $(elapsed)\n")
     end
 end
