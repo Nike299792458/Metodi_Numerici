@@ -44,16 +44,14 @@ function main()
     therm = parsed_args["therm"]
     ratio = parsed_args["ratio"]
     sample = parsed_args["sample"]
+    
     dfname = @sprintf("data_ratio=%i_sample=%.1e_doublers=%i.txt", ratio, sample, doublers)
-    startp = @sprintf "free_scalar_th_sample=%.1eratio=%.i" sample ratio
+    startp = @sprintf "free_scalar_th_sample=%.1eratio=%.iNs=%iNt=%i" sample ratio Ns Nt #Nt ed Ns sono in questo momento sia input chge output di sta funzione di merda e non so come risolvere la cosa
     paths = filter(startswith(startp), readdir(path))
     temporal_dim = []
-    O1 = []
     ϵ_norm = []
-    O1v = []
-    ϵ_normv = []
     for (i,fname) in enumerate(paths)
-        Nt = parse(Int, fname[end-10:end-9])
+        Nt = parse(Int, fname[end-5:end-4])  
 
         local w = open(joinpath([path, fname]), "r") do io
             readdlm(io, header = true)
@@ -63,26 +61,25 @@ function main()
         O2_j = JackKnife(w[1][therm:end,2], blocksize)
         O3_j = JackKnife(w[1][therm:end,3], blocksize)
         ϵ_norm_j =(O1_j+O2_j-O3_j)/2
-
+        #=
         O1_b_j = JackKnife(w[1][therm:end,4], blocksize)
         O2_b_j = JackKnife(w[1][therm:end,5], blocksize)
         O3_b_j = JackKnife(w[1][therm:end,6], blocksize)
         ϵ_norm_b_j =(O1_b_j+O2_b_j-O3_b_j)/2
- 
-        
-        push!(temporal_dim, Nt)
-        push!(O1, mean(O1_j))
-        push!(ϵ_norm, (mean(ϵ_norm_j)- mean(ϵ_norm_b_j)))
+        =#
 
-        push!(O1v, std(O1_j, corrected = false).*sqrt(length(O1_j)-1))
-        push!(ϵ_normv, std(ϵ_norm_j, corrected = false).*sqrt(length(ϵ_norm_j)-1))
-    
+        push!(temporal_dim, Nt)
+        push!(ϵ_norm, mean(ϵ_norm_j))
+        push!(ϵ_normv, std(ϵ_norm_j, corrected = false).*sqrt(length(ϵ_norm_j)-1))# non so che errore mettere e questo è il minimo
+
+
     end
 
     w = open(joinpath([path, dfname]), "w") do io
-        writedlm(io, ["temporal_dim" "O1" "O1v" "ϵ_norm" "ϵ_normv"], ",")
-        writedlm(io, [temporal_dim O1 O1v ϵ_norm ϵ_normv], ",")
+        writedlm(io, ["temporal_dim"  "ϵ_norm" ], ",")
+        writedlm(io, [temporal_dim ϵ_norm ], ",")
     end
     println("Done! Data stored in $(joinpath([path, dfname]))")
 end
 main()
+

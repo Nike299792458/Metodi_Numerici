@@ -58,14 +58,14 @@ function main()
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf("free_scalar_th_sample=%.1eratio=%.iNt=%2.2iNs=%2.2i.txt" , sample, ratio, Nt, Ns)
+        fname = @sprintf("free_scalar_th_sample=%.1eratio=%.iNs=%2.2iNt=%2.2i.txt" , sample, ratio, Ns, Nt)
         fr = joinpath([path, fname])
         if !isfile(fr)
             touch(fr)
         end
         # writing header
         open(fr, "w") do infile
-            writedlm(infile, ["obs1" "obs2" "obs3" "obs1_b" "obs2_b" "obs3_b"], " ")
+            writedlm(infile, ["obs1" "obs2" "obs3"], " ")
         end
         
         start = now()
@@ -82,14 +82,14 @@ function main()
                 obs1 = O1(stvol, mhat,lattice)
                 obs2 = O2(stvol, Nt, lattice)
                 obs3 = O3(stvol, lattice)
-                writedlm(datafile, [obs1 obs2 obs3 missing missing missing], " ")
+                writedlm(datafile, [obs1 obs2 obs3 ], " ")
             end
             
         end
         close(datafile)
 
     
-        Nt_b = 1000
+        Nt_b = 10
         Ns_b = ratio * Nt_b
         stvol_b = Nt_b # stvol=Nt*Ns^{STDIM-1}
         for i in 1:(STDIM-1)
@@ -98,13 +98,21 @@ function main()
         lattice_b = zeros(Float64, Nt_b, Ns_b)
         acc = 0
 
-        # Lettura del file esistente
-        data = readdlm(fr, ' ', header=true)
-        header = data[1]
-        rows = data[2]
+        # files management
+        if !isdir(path)
+            mkpath(path)
+        end
+        fname = @sprintf("free_scalar_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2i.txt" , sample, ratio, Nt_b, Nt)
+        fr = joinpath([path, fname])
+        if !isfile(fr)
+            touch(fr)
+        end
+        # writing header
+        open(fr, "w") do infile
+            writedlm(infile, ["obs1_b" "obs2_b" "obs3_b"], " ")
+        end
 
-        # Aggiornamento delle righe con le nuove osservabili
-        row_idx = 1
+        datafile = open(fr, "a")
         for iter in 1:sample
             for r in LinearIndices(lattice_b)
                 acc += heathbath!(lattice_b, r, mhat, Nt_b, Ns_b)
@@ -117,18 +125,12 @@ function main()
                 obs1_b = O1(stvol_b, mhat, lattice_b)
                 obs2_b = O2(stvol_b, Nt_b, lattice_b)
                 obs3_b = O3(stvol_b, lattice_b)
-                push!(rows[row_idx, 4:6], [obs1_b obs2_b obs3_b])
-                row_idx += 1
+                writedlm(datafile, [obs1_b obs2_b obs3_b ], " ")
             end
         end
+        close(datafile)
 
-        # Scrittura delle righe aggiornate nel file
-        open(fr, "w") do datafile
-            writedlm(datafile, header, " ")
-            for row in rows
-                writedlm(datafile, row, " ")
-            end
-        end
+        
         elapsed = Dates.canonicalize(Dates.round((now() - start), Dates.Second))
         println("\n$(round(now(), Dates.Second));\nNₜ = $Nt,Ns = $Ns, elapsed time $(elapsed)\n")
     end
