@@ -58,7 +58,7 @@ function main()
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf("free_scalar_th_sample=%.1eratio=%.iNs=%2.2iNt=%2.2i.txt" , sample, ratio, Ns, Nt)
+        fname = @sprintf("free_scalar_th_sample=%.1eratio=%.iNt=%2.2iNs=%2.2i.txt" , sample, ratio, Nt, Ns)
         fr = joinpath([path, fname])
         if !isfile(fr)
             touch(fr)
@@ -89,7 +89,7 @@ function main()
         close(datafile)
 
     
-        Nt_b = 100
+        Nt_b = 500
         Ns_b = ratio * Nt_b
         stvol_b = Nt_b # stvol=Nt*Ns^{STDIM-1}
         for i in 1:(STDIM-1)

@@ -46,7 +46,7 @@ function main()
     sample = parsed_args["sample"]
     
     dfname = @sprintf("data_ratio=%i_sample=%.1e_doublers=%i.txt", ratio, sample, doublers)
-    startp = @sprintf "free_scalar_th_sample=%.1eratio=%.iNs=" sample ratio 
+    startp = @sprintf "free_scalar_th_sample=%.1eratio=%.iNt=" sample ratio 
     paths = filter(startswith(startp), readdir(path))
     temporal_dim = []
     ϵ_norm = []
@@ -58,7 +58,7 @@ function main()
 
 
     for (i,fname) in enumerate(paths)
-        Nt = parse(Int, fname[end-5:end-4])  
+        Nt = parse(Int, fname[end-10:end-9])  
 
         local w = open(joinpath([path, fname]), "r") do io
             readdlm(io, header = true)
