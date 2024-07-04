@@ -89,7 +89,7 @@ function main()
         close(datafile)
 
     
-        Nt_b = 10
+        Nt_b = 100
         Ns_b = ratio * Nt_b
         stvol_b = Nt_b # stvol=Nt*Ns^{STDIM-1}
         for i in 1:(STDIM-1)
