@@ -1,81 +1,43 @@
 using ArgParse, Dates, DelimitedFiles, Random, Printf, LinearAlgebra
 include("free_scalar.jl")
-
-function parse_cmd()
-    s = ArgParseSettings()
-
-    @add_arg_table s begin
-        "ratio"
-            help = "Ratio between spatial and temporal size of the lattice"
-            required = true
-            arg_type = Int
-        "Nt"
-            help = "temporal division"
-            required = true
-            arg_type = Int
-        "sample"
-            help = "Number of steps in the simulation"
-            required = true
-            arg_type = Int
-        "--path", "-p"
-            help = "The path where files are stored"
-            default = joinpath(["..", "simulations_c"])
-            required = false
-            arg_type = String
-        
-    end
-    return parse_args(s)
-end
-
 function main()
-    parsed_args = parse_cmd()
-    ratio = parsed_args["ratio"]
-    Nt = parsed_args["Nt"]
-    sample = parsed_args["sample"]
-    path = parsed_args["path"]
+    ratio = 2
+    sample = 10000000
+    path = joinpath(["..", "simulations_c"])
+   
 
-    #simulation parameters (T/m independant)
-    Ns=ratio*Nt
-    mhat::Float64=(1/Nt)
     
+    println(@sprintf "Starting simulation: sample=%.1e ratio=%.i " sample ratio )
 
-    stvol=Nt #stvol=Nt*Ns^{STDIM-1}
-        for i in 1:(STDIM-1)
-            stvol=stvol*Ns
-        end
-
-    Nt_b = ratio*Nt
-    Ns_b = Ns
-    stvol_b = Nt_b # stvol=Nt*Ns^{STDIM-1}
-    for i in 1:(STDIM-1)
-        stvol_b = stvol_b * Ns_b
-    end
-
-    #generic
-    orsteps = 5
-    measevery = 10
-
-    println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
-    #Tonm =[1] #when simulating T=m
-    Tonm = collect(range(0.1, stop=2.5, length=15)) #Otherwise
-    for T_norm in Tonm
+   
+        Nt=2
+        Ns=2
         # initializing...
         lattice = zeros(Float64, Nt,Ns)
         acc=0
+        
+        # simulation parameters
+        orsteps = 8
+        measevery = 10
+
+
+        #mhat::Float64=(1.0)/Nt
+        mhat=1.0
+      
+      
+        stvol=Nt*Ns #stvol=Nt*Ns^{STDIM-1}
+       
+
         
         # files management
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf("fs_th_sample=%.1eratio=%.iNt=%2.2iT/m=%2.2f.txt" , sample, ratio, Nt, T_norm)
+        fname = @sprintf("free_scalar_th_sample=%.1eratio=%.iNt=%2.2iNs=%2.2i.txt" , sample, ratio, Nt, Ns)
         fr = joinpath([path, fname])
         if !isfile(fr)
-        touch(fr)
-        println("File '$fr' creato.")
-        else
-        println("File '$fr' esiste già.")
+            touch(fr)
         end
-
         # writing header
         open(fr, "w") do infile
             writedlm(infile, ["obs1" "obs2" "obs3"], " ")
@@ -94,13 +56,20 @@ function main()
             if iter%measevery == 0
                 obs1 = O1(stvol, mhat,lattice)
                 obs2 = O2(stvol, Nt, lattice)
-                obs3 = O3(stvol, Nt, lattice)
+                obs3 = O3(stvol, lattice)
                 writedlm(datafile, [obs1 obs2 obs3 ], " ")
             end
             
         end
         close(datafile)
 
+    
+       #= Nt_b = ratio*Nt
+        Ns_b = Ns
+        stvol_b = Nt_b # stvol=Nt*Ns^{STDIM-1}
+        for i in 1:(STDIM-1)
+            stvol_b = stvol_b * Ns_b
+        end
         lattice_b = zeros(Float64, Nt_b, Ns_b)
         acc = 0
 
@@ -108,7 +77,7 @@ function main()
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iT/m=%2.2f.txt" , sample, ratio, Nt_b, Nt, T_norm)
+        fname = @sprintf("free_scalar_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2i.txt" , sample, ratio, Nt_b, Nt)
         fr = joinpath([path, fname])
         if !isfile(fr)
             touch(fr)
@@ -130,18 +99,15 @@ function main()
             if iter % measevery == 0
                 obs1_b = O1(stvol_b, mhat, lattice_b)
                 obs2_b = O2(stvol_b, Nt_b, lattice_b)
-                obs3_b = O3(stvol_b, Nt_b, lattice_b)
+                obs3_b = O3(stvol_b, lattice_b)
                 writedlm(datafile, [obs1_b obs2_b obs3_b ], " ")
             end
         end
         close(datafile)
 
-        
+        =#
         elapsed = Dates.canonicalize(Dates.round((now() - start), Dates.Second))
         println("\n$(round(now(), Dates.Second));\nNₜ = $Nt,Ns = $Ns, elapsed time $(elapsed)\n")
-        
-    end
     
 end
-
 main()
