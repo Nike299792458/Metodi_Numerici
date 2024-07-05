@@ -48,12 +48,13 @@ function main()
     therm = parsed_args["therm"]
     ratio = parsed_args["ratio"]
     sample = parsed_args["sample"]
+    Nt = parsed_args["Nt"]
     Nt_b=Nt*ratio
     
     dfname = @sprintf("data_Nt=%2.2i_sample=%.1e_doublers=%i.txt", Nt, sample, doublers)
-    startp = @sprintf "fs_th_sample=%.1eratio=%.iNt=%2.2iT/m=" sample ratio Nt  
+    startp = @sprintf "fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=" sample ratio Nt  
     paths = filter(startswith(startp), readdir(path))
-    temporal_dim = []
+    Tonm = []
     ϵ_norm = []
     ϵ_norm_b =[]
     ϵ_norm_r = []
@@ -63,7 +64,7 @@ function main()
 
 
     for (i,fname) in enumerate(paths)
-        T/m= parse(Int, fname[end-5:end-4])  
+        T_norm =  parse(Int, fname[end-5:end-4])  
 
         local w = open(joinpath([path, fname]), "r") do io
             readdlm(io, header = true)
@@ -76,17 +77,17 @@ function main()
         
         
 
-        push!(temporal_dim, Nt)
+        push!(Tonm, T_norm)
         push!(ϵ_norm, mean(ϵ_norm_j))
         push!(ϵ_normv, std(ϵ_norm_j, corrected = false).*sqrt(length(ϵ_norm_j)-1))
 
 
     end
     dfname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
-    startp = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iT/m=" ,sample, ratio, Nt_b, Nt) 
+    startp = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=" ,sample, ratio, Nt_b, Nt) 
     paths = filter(startswith(startp), readdir(path))
     for (i,fname) in enumerate(paths)
-        Nt = parse(Int, fname[end-6:end-4])  
+        T_norm= parse(Int, fname[end-5:end-4]) 
 
         local w = open(joinpath([path, fname]), "r") do io
             readdlm(io, header = true)
@@ -103,18 +104,18 @@ function main()
         push!(ϵ_normv_b, std(ϵ_norm_b_j, corrected = false).*sqrt(length(ϵ_norm_b_j)-1))
 
 
-    
+    end
     println(ϵ_norm)
-   #= ϵ_norm_r= ϵ_norm-ϵ_norm_b
+    ϵ_norm_r= ϵ_norm-ϵ_norm_b
     println(ϵ_norm_r)
     ϵ_normv_r= ϵ_normv #errore? 
     println(ϵ_normv_r)
-    println(temporal_dim)
+
     w = open(joinpath([path, dfname]), "w") do io
-        writedlm(io, ["temporal_dim"  "ϵ_norm" "ϵ_normv" ], ",")
-        writedlm(io, [temporal_dim ϵ_norm_r ϵ_normv_r], ",")
+        writedlm(io, ["Tonm"  "ϵ_norm" "ϵ_normv" ], ",")
+        writedlm(io, [Tonm ϵ_norm_r ϵ_normv_r], ",")
     end
-    println("Done! Data stored in $(joinpath([path, dfname]))")=#
+    println("Done! Data stored in $(joinpath([path, dfname]))")
 end
 main()
 

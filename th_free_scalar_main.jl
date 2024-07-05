@@ -67,15 +67,11 @@ function main()
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf("fs_th_sample=%.1eratio=%.iNt=%2.2iT/m=%2.2f.txt" , sample, ratio, Nt, T_norm)
+        fname = @sprintf "fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=%2.2f.txt"  sample ratio Nt T_norm
         fr = joinpath([path, fname])
         if !isfile(fr)
-        touch(fr)
-        println("File '$fr' creato.")
-        else
-        println("File '$fr' esiste già.")
+            touch(fr)
         end
-
         # writing header
         open(fr, "w") do infile
             writedlm(infile, ["obs1" "obs2" "obs3"], " ")
@@ -108,7 +104,7 @@ function main()
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iT/m=%2.2f.txt" , sample, ratio, Nt_b, Nt, T_norm)
+        fname = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=%2.2f.txt" , sample, ratio, Nt_b, Nt, T_norm)
         fr = joinpath([path, fname])
         if !isfile(fr)
             touch(fr)
