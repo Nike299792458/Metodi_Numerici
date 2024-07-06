@@ -9,20 +9,46 @@ margin=5Plots.mm
 
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
-ratio= [4]
-sample= 10000
+ratio= 4
+sample= 100000
 doublers= false
 p=plot()
-for r in ratio
-    println(r)
-    fname= @sprintf("data_ratio=%i_sample=%.1e_doublers=%i.txt", r, sample, doublers)
-    lines = readlines(fname)
-    Nt = [parse(Float64, split(line, ',')[1]) for line in lines[2:end]]
-    ϵ_norm= [parse(Float64, split(line, ',')[4]) for line in lines[2:end]]
-    ϵ_normv= [parse(Float64, split(line, ',')[5]) for line in lines[2:end]]
-    x=Nt .^(-2)
-    scatter!(p, x, ϵ_norm, yerr=ϵ_normv, label="Dati $r")
-    display(p)
+
+
+#=
+#T≠m
+fname= @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
+lines = readlines(fname)
+Tonm = [parse(Float64, split(line, ',')[1]) for line in lines[2:end]]
+ϵ_norm= [parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
+ϵ_normv= [parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
+x=Tonm
+scatter!(p, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
+display(p)
+=#
+
+#T=m  
+temporal_division=[4,5,6,7,8,10]
+ϵ_norm = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+ϵ_norm_v = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+x =[]
+push!(x, temporal_division .^(-2))
+
+for i= 1:length(temporal_division)
+    println(i)
+end
+temporal_division[1]
+for i= 1:length(temporal_division)
+    local Nt = temporal_division[i]
+    local Nt_b= Nt*ratio
+    local fname= @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
+    local lines = readlines(fname)
+    line = lines[2]
+    ϵ_norm[i]= parse(Float64, split(line, ',')[2])  
+    ϵ_normv[i]= parse(Float64, split(line, ',')[3]) 
 end
 
+println(ϵ_norm)
+scatter!(p, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
+display(p)
 
