@@ -7,7 +7,7 @@ ratio=(4 6 8)
 
 for ratioi in "${ratio[@]}"
 do 
-	julia ../th_free_scalar_main.jl "$ratioi" "$sample"
+	julia th_free_scalar_main.jl "$ratioi" "$sample"
 done
 
 
