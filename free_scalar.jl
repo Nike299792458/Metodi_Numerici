@@ -19,6 +19,7 @@ function O2(stvol::Int, Nt::Int, lattice::Array{Float64})
     ris= dot(diff,diff)/stvol
     return ris
 end
+
 #// O3 = 1/(Nt*Ns^{STDIM-1}) Σ_n (ϕ_(n+0)-ϕ_n)^2
 function O3(stvol::Int, Nt::Int, lattice::Array{Float64})
     rows = [collect(row) for row in eachcol(lattice)]
@@ -30,6 +31,7 @@ function O3(stvol::Int, Nt::Int, lattice::Array{Float64})
     ris= a/stvol
     return ris
 end
+
 #=
 Ns è il numero di colonne (lunghezza riga ) e Nt il numero di righe (lunghezza colonne)
 per passare dal singolo indice r ai due indici (i,j):
