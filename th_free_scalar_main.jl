@@ -37,16 +37,7 @@ function main()
     #simulation parameters (T/m independant)
     Ns=ratio*Nt
     mhat::Float64=(1/Nt)
-    
-
-<<<<<<< HEAD
-        mhat::Float64=(1.0)/Nt
-      
- 
-        stvol=Nt #stvol=Nt*Ns^{STDIM-1}
-=======
     stvol=Nt #stvol=Nt*Ns^{STDIM-1}
->>>>>>> 16321b9a4490d511b3e859a43dc232ae542e9d62
         for i in 1:(STDIM-1)
             stvol=stvol*Ns
         end
@@ -146,9 +137,6 @@ function main()
     end
     
 end
-<<<<<<< HEAD
-main()
-=======
 
 main()
->>>>>>> 16321b9a4490d511b3e859a43dc232ae542e9d62
+
