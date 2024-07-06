@@ -47,7 +47,7 @@ function main()
 
         mhat::Float64=(1.0)/Nt
       
-      
+ 
         stvol=Nt #stvol=Nt*Ns^{STDIM-1}
         for i in 1:(STDIM-1)
             stvol=stvol*Ns
