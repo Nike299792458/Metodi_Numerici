@@ -30,10 +30,10 @@ function parse_cmd()
             help= "if we're simulating with wrong discretization"  
             default = false
             required = false
-            arg_type = Int
+            arg_type = Bool
         "--path", "-p"
             help = "the path where files are stored"
-            default = joinpath([ "simulations_c"])
+            default = joinpath(["..", "simulations_c"])
             required = false
             arg_type = String
     end
