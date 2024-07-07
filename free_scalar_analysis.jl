@@ -25,7 +25,7 @@ function parse_cmd()
         "blocksize"
             help = "the number of points in a block"
             required = true
-            arg_type = Int  
+            arg_type = Bool 
         "doublers"
             help= "if we're simulating with wrong discretization"  
             default = false
@@ -33,7 +33,7 @@ function parse_cmd()
             arg_type = Int
         "--path", "-p"
             help = "the path where files are stored"
-            default = joinpath([ "simulations_c"])
+            default = joinpath([".." "simulations_c"])
             required = false
             arg_type = String
     end
