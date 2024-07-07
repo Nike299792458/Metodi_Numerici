@@ -8,20 +8,34 @@ STDIM = 2 #spacetime dimensionality
 
 #O1 = 1/(Nt*Ns^{STDIM-1}) Σ_n (mhat^2 ϕ_n^2)
 function O1(stvol::Int, mhat::Float64, lattice::Array{Float64})
-   ris= mhat*mhat*dot(lattice,lattice)/stvol
+   ris=mhat*mhat*dot(lattice,lattice)/stvol
     return ris
 end
 
+
 #O2 = 1/(Nt*Ns^{STDIM-1}) Σ_n Σ_{mu>0} (ϕ_(n+μ)-ϕ_n)^2
-function O2(stvol::Int, Nt::Int, lattice::Array{Float64})
+#=
+function O2_v(stvol::Int, Nt::Int, lattice::Array{Float64})
     lattice=reshape(lattice, :)
     diff= circshift(lattice,-Nt)-lattice
     ris= dot(diff,diff)/stvol
     return ris
 end
+=#
+function O2(stvol::Int, Nt::Int ,Ns::Int, lattice::Array{Float64})
+    ris=0
+    for r in LinearIndices(lattice)
+        i=mod1(r,Nt)
+        j=cld(r,Nt)
+        aux=lattice[i, mod1(j+1, Ns)] - lattice[i,j]
+        ris = ris + aux*aux
+    end
+    ris=ris/stvol
+    return ris
+end
 
 #// O3 = 1/(Nt*Ns^{STDIM-1}) Σ_n (ϕ_(n+0)-ϕ_n)^2
-function O3(stvol::Int, Nt::Int, lattice::Array{Float64})
+#=function O3_v(stvol::Int, Nt::Int, lattice::Array{Float64})
     rows = [collect(row) for row in eachcol(lattice)]
     a=0
     for i in 1:Nt
@@ -29,6 +43,19 @@ function O3(stvol::Int, Nt::Int, lattice::Array{Float64})
         a+=dot(diff,diff)
     end
     ris= a/stvol
+    return ris
+end
+=#
+
+function O3(stvol::Int, Nt::Int, lattice::Array{Float64})
+    ris=0
+    for r in LinearIndices(lattice)
+        i=mod1(r,Nt)
+        j=cld(r,Nt)
+        aux=lattice[mod1(i+1, Nt), j]-lattice[i, j]
+        ris = ris + aux*aux
+    end
+    ris=ris/stvol
     return ris
 end
 
@@ -41,8 +68,7 @@ j= celing-division tra 1 e Nt e i=modulo in base Nt di r
 function Σ_n(lattice::Array{Float64}, r::Int, Nt::Int, Ns::Int)
     i=mod1(r,Nt)
     j=cld(r,Nt)
-    lattice[mod1(i+1, Nt), j] + lattice[mod1(i-1, Nt), j] +
-                   lattice[i, mod1(j+1, Ns)] + lattice[i, mod1(j-1, Ns)]
+    lattice[mod1(i+1, Nt), j] + lattice[mod1(i-1, Nt), j] + lattice[i, mod1(j+1, Ns)] + lattice[i, mod1(j-1, Ns)]
 end
     
 
@@ -75,5 +101,6 @@ function JackKnife(x::Array, blocksize::Int)
     x_blocked, length = Blocking(x, blocksize)
     jk(a) = let s = sum(a); [s-v for v in a] end
     x_j = vec(jk(x_blocked)/(length-1))
+
     return x_j
 end

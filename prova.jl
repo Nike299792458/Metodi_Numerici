@@ -4,6 +4,7 @@ include("free_scalar.jl")
 
 
 matrix = ([1.0 2.0 3.0 4.0 5.0; 1.0 1.0 1.0 1.0 1.0; 2.0 2.0 1.0 1.0 1.0; 3.0 2.0 1.0 2.0 3.0])
+
 Nt= size(matrix,1) #ho 4 righe (4 è la lunghezza della dimensione temporale)
 Ns= size(matrix, 2)
 matrix=reshape(matrix, :)

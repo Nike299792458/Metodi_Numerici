@@ -25,7 +25,7 @@ function parse_cmd()
         "blocksize"
             help = "the number of points in a block"
             required = true
-            arg_type = Bool 
+            arg_type = Int
         "doublers"
             help= "if we're simulating with wrong discretization"  
             default = false
@@ -81,11 +81,11 @@ function main()
         
 
         push!(Tonm, T_norm)
-        push!(ϵ_norm, mean(sum_obs_j)/2)
+        push!(ϵ_norm, Nt*Nt*mean(sum_obs_j)/2)
         push!(ϵ_normv, std(sum_obs_j, corrected = false).*sqrt(length(sum_obs_j)-1))
 
-
     end
+
     dfname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
     startp = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=" ,sample, ratio, Nt_b, Nt) 
     paths = filter(startswith(startp), readdir(path))
@@ -103,16 +103,17 @@ function main()
         
 
         
-        push!(ϵ_norm_b, mean(sum_obs_b_j)/2)
+        push!(ϵ_norm_b, Nt*Nt*mean(sum_obs_b_j)/2)
         push!(ϵ_normv_b, std(sum_obs_b_j, corrected = false).*sqrt(length(sum_obs_b_j)-1))
 
 
     end
-    println(ϵ_norm)
     ϵ_norm_r= ϵ_norm-ϵ_norm_b
-    println(ϵ_norm_r)
     ϵ_normv_r= ϵ_normv #errore? 
-    println(ϵ_normv_r)
+    println(ϵ_norm)
+    println(ϵ_norm_b)
+    println(ϵ_norm_r)
+
 
     w = open(joinpath([path, dfname]), "w") do io
         writedlm(io, ["Tonm"  "ϵ_norm" "ϵ_normv" ], ",")

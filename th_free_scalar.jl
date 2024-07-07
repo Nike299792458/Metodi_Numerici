@@ -38,9 +38,9 @@ function main()
     Ns=ratio*Nt
     mhat::Float64=(1/Nt)
     stvol=Nt #stvol=Nt*Ns^{STDIM-1}
-        for i in 1:(STDIM-1)
-            stvol=stvol*Ns
-        end
+    for i in 1:(STDIM-1)
+         stvol=stvol*Ns
+     end
 
     Nt_b = ratio*Nt
     Ns_b = Ns
@@ -51,14 +51,14 @@ function main()
 
     #generic
     orsteps = 5
-    measevery = 10
+    measevery = 5
 
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
-    Tonm =[1] #when simulating T=m
-    #Tonm = collect(range(0.1, stop=2.5, length=15)) #Otherwise
+    #Tonm =[1] #when simulating T=m
+    Tonm = collect(range(0.1, stop=2.5, length=15)) #Otherwise
     for T_norm in Tonm
         # initializing...
-        lattice = zeros(Float64, Nt,Ns)
+        lattice = zeros(Float64, Nt ,Ns)
         acc=0
         
         # files management
@@ -87,7 +87,7 @@ function main()
 
             if iter%measevery == 0
                 obs1 = O1(stvol, mhat,lattice)
-                obs2 = O2(stvol, Nt, lattice)
+                obs2 = O2(stvol, Nt, Ns, lattice)
                 obs3 = O3(stvol, Nt, lattice)
                 writedlm(datafile, [obs1 obs2 obs3 ], " ")
             end
@@ -123,7 +123,7 @@ function main()
 
             if iter % measevery == 0
                 obs1_b = O1(stvol_b, mhat, lattice_b)
-                obs2_b = O2(stvol_b, Nt_b, lattice_b)
+                obs2_b = O2(stvol_b, Nt_b, Ns_b, lattice_b)
                 obs3_b = O3(stvol_b, Nt_b, lattice_b)
                 writedlm(datafile, [obs1_b obs2_b obs3_b ], " ")
             end
@@ -137,6 +137,5 @@ function main()
     end
     
 end
-
 main()
 
