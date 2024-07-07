@@ -9,7 +9,7 @@ ratio=5
 
 for Nti in "${Nt[@]}"
 do 
-	julia th_free_scalar_main.jl "$Nti" "$ratio" "$sample"
+	julia th_free_scalar.jl "$Nti" "$ratio" "$sample"
 done
 
 
