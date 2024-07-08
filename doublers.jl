@@ -1,10 +1,11 @@
 using Combinatorics, LinearAlgebra, Random
 
 #= Cosa trovo in questo file:
-Osservabili, heathbath, metropolis, microcanonico
-notazione= stvol= spacetime volume
+Osservabili con discretizzzazione sbagliata, heathbath, metropolis, microcanonico
+notazione: stvol= spacetime volume, STDIM spacetime dimensionality
+le funzioni contrassegnate come _v sono una prova di implementazione vettoriale, ma non hanno portato a risulati compatibili 
 =#
-STDIM = 2 #spacetime dimensionality
+STDIM = 
 
 #O1 = 1/(Nt*Ns^{STDIM-1}) Σ_n (mhat^2 ϕ_n^2)
 function O1d(stvol::Int, mhat::Float64, lattice::Array{Float64})
@@ -13,19 +14,44 @@ function O1d(stvol::Int, mhat::Float64, lattice::Array{Float64})
 end
 
 #O2 = 1/(4*Nt*Ns^{STDIM-1}) Σ_n Σ_{mu>0} (ϕ(n+μ)-ϕ_(n-μ))^2
-function O2d(stvol::Int, Nt::Int, lattice::Array{Float64})
+function O2d_v(stvol::Int, Nt::Int, lattice::Array{Float64})
     lattice=reshape(lattice, :)
     ris= dot(circshift(lattice,-Nt)-circshift(lattice,+Nt),circshift(lattice,-Nt)-circshift(lattice,+Nt))/(stvol*4)
     return ris
 end
+
+function O2d(stvol::Int, Nt::Int ,Ns::Int, lattice::Array{Float64})
+    ris=0
+    for r in LinearIndices(lattice)
+        i=mod1(r,Nt)
+        j=cld(r,Nt)
+        aux=l(attice[i, mod1(j+1, Ns)] - lattice[i,mod1(j-1, Ns)])/2
+        ris = ris + aux*aux
+    end
+    ris=ris/stvol
+    return ris
+end
+
 #// O3 = 1/(4*Nt*Ns^{STDIM-1}) Σ_n (ϕ_(n+0)-ϕ_(n-0))^2
-function O3d(stvol::Int, lattice::Array{Float64})
+function O3d_v(stvol::Int, lattice::Array{Float64})
     rows = [collect(row) for row in eachcol(lattice)]
     a=0
     for i in 1:size(lattice,1)
     a+=dot(circshift(rows[i],-1)-circshift(rows[i],+1),circshift(rows[i],-1)-circshift(rows[i],+1))
     end
     ris= a/(stvol*4)
+    return ris
+end
+
+function O3d(stvol::Int, Nt::Int, lattice::Array{Float64})
+    ris=0
+    for r in LinearIndices(lattice)
+        i=mod1(r,Nt)
+        j=cld(r,Nt)
+        aux=(lattice[mod1(i+1, Nt), j]-lattice[mod1(i-1, Nt), j])/2
+        ris = ris + aux*aux
+    end
+    ris=ris/stvol
     return ris
 end
 #=

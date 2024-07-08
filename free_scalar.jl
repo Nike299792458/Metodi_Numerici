@@ -2,9 +2,10 @@ using Combinatorics, LinearAlgebra, Random
 
 #= Cosa trovo in questo file:
 Osservabili, heathbath, metropolis, microcanonico
-notazione= stvol= spacetime volume
+notazione: stvol= spacetime volume, STDIM spacetime dimensionality
+le funzioni contrassegnate come _v sono una prova di implementazione vettoriale, ma non hanno portato a risulati compatibili 
 =#
-STDIM = 2 #spacetime dimensionality
+STDIM = 2 
 
 #O1 = 1/(Nt*Ns^{STDIM-1}) Σ_n (mhat^2 ϕ_n^2)
 function O1(stvol::Int, mhat::Float64, lattice::Array{Float64})

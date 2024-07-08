@@ -80,9 +80,9 @@ function main()
         
         
 
-        push!(Tonm, T_norm)
-        push!(ϵ_norm, Nt*Nt*mean(sum_obs_j)/2)
-        push!(ϵ_normv, std(sum_obs_j, corrected = false).*sqrt(length(sum_obs_j)-1))
+        push!(Tonm , T_norm)
+        push!(ϵ_norm , Nt*Nt*mean(sum_obs_j)/2)
+        push!(ϵ_normv , std(sum_obs_j, corrected = false).*sqrt(length(sum_obs_j)-1))
 
     end
 
@@ -108,11 +108,12 @@ function main()
 
 
     end
-    ϵ_norm_r= ϵ_norm-ϵ_norm_b
-    ϵ_normv_r= ϵ_normv #errore? 
-    println(ϵ_norm)
-    println(ϵ_norm_b)
+    ϵ_norm_r= ϵ_norm - ϵ_norm_b
+    ϵ_normv_r = sqrt.((ϵ_normv ./ ϵ_norm).^2 .+ (ϵ_normv_b ./ ϵ_norm_b).^2) .* ϵ_norm_r
     println(ϵ_norm_r)
+    println(ϵ_normv)
+    println(ϵ_normv_b)
+    println(ϵ_normv_r)
 
 
     w = open(joinpath([path, dfname]), "w") do io
