@@ -130,10 +130,12 @@ function main()
             end
         end
         close(datafile)
-   
+
+        elapsed = Dates.canonicalize(Dates.round((now() - start), Dates.Second))
+        println("\n$(round(now(), Dates.Second));\nNₜ = $Nt,Tonm = $T_norm, elapsed time $(elapsed)\n")
     end
-    elapsed = Dates.canonicalize(Dates.round((now() - start), Dates.Second))
-    println("\n$(round(now(), Dates.Second));\nNₜ = $Nt,Ns = $Ns, elapsed time $(elapsed)\n")
+    
 end
 main()
+
 

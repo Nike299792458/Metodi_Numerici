@@ -26,11 +26,18 @@ Tonm = [parse(Float64, split(line, ',')[1]) for line in lines[2:end]]
 ϵ_norm= [parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
 ϵ_normv= [parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
 x=Tonm
-scatter!(p1, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
+scatter!(p1, x, ϵ_norm, yerr=ϵ_normv, label="ϵ/T^2")
 display(p1)
 
 
-
+fname= @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
+lines = readlines(fname)
+Tonm = [parse(Float64, split(line, ',')[1]) for line in lines[2:end]]
+obs1_r= [parse(Float64, split(line, ',')[4]) for line in lines[2:end]]
+obs1v_r= [parse(Float64, split(line, ',')[5]) for line in lines[2:end]]
+x=Tonm
+scatter!(p2, x, obs1_r, yerr=obs1v_r, label=" ( ϵ - P)/T^2 ")
+display(p2)
 
 #=
 #T=m  

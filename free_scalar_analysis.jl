@@ -64,9 +64,12 @@ function main()
     ϵ_normv_b =[]
     ϵ_normv_r = []
     obs1 = []
-    obs1_v = []
+    obs1v = []
     obs1_b = []
-    obs1_v_b = []
+    obs1v_b = []
+    obs1_r = []
+    obs1v_r = []
+
 
 
 
@@ -86,9 +89,9 @@ function main()
 
         push!(Tonm , T_norm)
         push!(ϵ_norm , Nt*Nt*mean(sum_obs_j)/2)
-        push!(ϵ_normv , std(sum_obs_j, corrected = false).*sqrt(length(sum_obs_j)-1))
-        push!(obs1 , mean(O1_j))
-        push!(obs1_v , std(O1_j, corrected = false).*sqrt(length(O1_j)-1))
+        push!(ϵ_normv , Nt*Nt*std(sum_obs_j, corrected = false).*sqrt(length(sum_obs_j)-1))
+        push!(obs1 , Nt*Nt*mean(O1_j))
+        push!(obs1v , Nt*Nt*std(O1_j, corrected = false).*sqrt(length(O1_j)-1))
 
     end
 
@@ -110,24 +113,28 @@ function main()
 
         
         push!(ϵ_norm_b, Nt*Nt*mean(sum_obs_b_j)/2)
-        push!(ϵ_normv_b, std(sum_obs_b_j, corrected = false).*sqrt(length(sum_obs_b_j)-1))
-        push!(obs1_b , mean(O1_b_j))
-        push!(obs1_v_b , std(O1_b_j, corrected = false).*sqrt(length(O1_b_j)-1))
+        push!(ϵ_normv_b, Nt*Nt*std(sum_obs_b_j, corrected = false).*sqrt(length(sum_obs_b_j)-1))
+        push!(obs1_b , Nt*Nt*mean(O1_b_j))
+        push!(obs1v_b , Nt*Nt*std(O1_b_j, corrected = false).*sqrt(length(O1_b_j)-1))
 
     end
     ϵ_norm_r= ϵ_norm - ϵ_norm_b
     ϵ_normv_r = sqrt.((ϵ_normv ./ ϵ_norm).^2 .+ (ϵ_normv_b ./ ϵ_norm_b).^2) .* ϵ_norm_r
+    obs1_r= obs1 - obs1_b
+    obs1v_r = sqrt.((obs1v ./ obs1).^2 .+ (obs1v_b ./ obs1_b).^2) .* obs1_r
     println(ϵ_norm_r)
-    println(ϵ_normv)
-    println(ϵ_normv_b)
     println(ϵ_normv_r)
 
 
     w = open(joinpath([path, dfname]), "w") do io
-        writedlm(io, ["Tonm"  "ϵ_norm" "ϵ_normv" ], ",")
-        writedlm(io, [Tonm ϵ_norm_r ϵ_normv_r], ",")
+        writedlm(io, ["Tonm"  "ϵ_norm" "ϵ_normv" "obs1" "obs1v" ], ",")
+        writedlm(io, [Tonm ϵ_norm_r ϵ_normv_r obs1_r obs1v_r] , ",")
     end
     println("Done! Data stored in $(joinpath([path, dfname]))")
 end
 main()
 
+
+#=
+Nt^(STDIM)*O1
+=#
