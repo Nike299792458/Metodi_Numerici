@@ -52,11 +52,12 @@ function main()
     Nt_b=Nt*ratio
     
     dfname = @sprintf("data_Nt=%2.2i_sample=%.1e_doublers=%i.txt", Nt, sample, doublers)
-    startp = @sprintf "fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=" sample ratio Nt  
+    startp = @sprintf "fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=" sample ratio Nt 
+    #startp = @sprintf "doublers_sample=%.1eratio=%.iNt=%2.2iTonm=" sample ratio Nt 
     paths = filter(startswith(startp), readdir(path))
     Tonm = []
-    sum_obs_j=[]
-    sum_obs_b_j=[]
+    ϵ_norm_j=[]
+    ϵ_norm_b_j=[]
     ϵ_norm = []
     ϵ_norm_b =[]
     ϵ_norm_r = []
@@ -80,23 +81,23 @@ function main()
             readdlm(io, header = true)
         end
 
-        O1_j = JackKnife(w[1][therm:end,1], blocksize)
-        O2_j = JackKnife(w[1][therm:end,2], blocksize)
-        O3_j = JackKnife(w[1][therm:end,3], blocksize)
-        sum_obs_j =(O1_j+O2_j-O3_j)
-        
+        O1_j = Nt*Nt*JackKnife(w[1][therm:end,1], blocksize)
+        O2_j = Nt*Nt*JackKnife(w[1][therm:end,2], blocksize)
+        O3_j = Nt*Nt*JackKnife(w[1][therm:end,3], blocksize)
+        ϵ_norm_j=(O1_j+O2_j-O3_j)/2
         
 
         push!(Tonm , T_norm)
-        push!(ϵ_norm , Nt*Nt*mean(sum_obs_j)/2)
-        push!(ϵ_normv , Nt*Nt*std(sum_obs_j, corrected = false).*sqrt(length(sum_obs_j)-1))
-        push!(obs1 , Nt*Nt*mean(O1_j))
-        push!(obs1v , Nt*Nt*std(O1_j, corrected = false).*sqrt(length(O1_j)-1))
+        push!(ϵ_norm, mean(ϵ_norm_j))
+        push!(ϵ_normv, std(ϵ_norm_j, corrected = false).*sqrt(length(ϵ_norm_j)-1))
+        push!(obs1 , mean(O1_j))
+        push!(obs1v , std(O1_j, corrected = false).*sqrt(length(O1_j)-1))
 
     end
 
     dfname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
     startp = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=" ,sample, ratio, Nt_b, Nt) 
+    #startp = @sprintf("doublers_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=" ,sample, ratio, Nt_b, Nt) 
     paths = filter(startswith(startp), readdir(path))
     for (i,fname) in enumerate(paths)
         T_norm= parse(Float64, fname[end-7:end-4]) 
@@ -105,17 +106,17 @@ function main()
             readdlm(io, header = true)
         end
 
-        O1_b_j = JackKnife(w[1][therm:end,1], blocksize)
-        O2_b_j = JackKnife(w[1][therm:end,2], blocksize)
-        O3_b_j = JackKnife(w[1][therm:end,3], blocksize)
-        sum_obs_b_j =(O1_b_j+O2_b_j-O3_b_j)
+        O1_b_j = Nt*Nt*JackKnife(w[1][therm:end,1], blocksize)
+        O2_b_j = Nt*Nt*JackKnife(w[1][therm:end,2], blocksize)
+        O3_b_j = Nt*Nt*JackKnife(w[1][therm:end,3], blocksize)
+        ϵ_norm_b_j=(O1_b_j+O2_b_j-O3_b_j)/2
         
 
         
-        push!(ϵ_norm_b, Nt*Nt*mean(sum_obs_b_j)/2)
-        push!(ϵ_normv_b, Nt*Nt*std(sum_obs_b_j, corrected = false).*sqrt(length(sum_obs_b_j)-1))
-        push!(obs1_b , Nt*Nt*mean(O1_b_j))
-        push!(obs1v_b , Nt*Nt*std(O1_b_j, corrected = false).*sqrt(length(O1_b_j)-1))
+        push!(ϵ_norm_b, mean(ϵ_norm_b_j))
+        push!(ϵ_normv_b, std(ϵ_norm_b_j, corrected = false).*sqrt(length(ϵ_norm_b_j)-1))
+        push!(obs1_b , mean(O1_b_j))
+        push!(obs1v_b , std(O1_b_j, corrected = false).*sqrt(length(O1_b_j)-1))
 
     end
     ϵ_norm_r= ϵ_norm - ϵ_norm_b
@@ -135,6 +136,3 @@ end
 main()
 
 
-#=
-Nt^(STDIM)*O1
-=#

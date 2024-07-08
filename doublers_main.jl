@@ -64,23 +64,23 @@ function main()
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf "fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=%2.2f.txt"  sample ratio Nt T_norm
+        fname = @sprintf "doublers_sample=%.1eratio=%.iNt=%2.2iTonm=%2.2f.txt"  sample ratio Nt T_norm
         fr = joinpath([path, fname])
         if !isfile(fr)
             touch(fr)
         end
         # writing header
         open(fr, "w") do infile
-            writedlm(infile, ["obs1" "obs2" "obs3"], " ")
+            writedlm(infile, ["obs1d" "obs2d" "obs3d"], " ")
         end
         
         start = now()
         datafile = open(fr, "a")
         for iter in 1:sample
             for r in LinearIndices(lattice)
-                acc+=heathbath!(lattice, r, mhat, Nt, Ns)
+                acc+=heathbathd!(lattice, r, mhat, Nt, Ns)
                 for _ in 1:orsteps
-                    acc+=overrelax!(lattice, r, mhat, Nt, Ns)
+                    acc+=overrelaxd!(lattice, r, mhat, Nt, Ns)
                 end
             end
 
@@ -101,7 +101,7 @@ function main()
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=%2.2f.txt" , sample, ratio, Nt_b, Nt, T_norm)
+        fname = @sprintf("doublers_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=%2.2f.txt" , sample, ratio, Nt_b, Nt, T_norm)
         fr = joinpath([path, fname])
         if !isfile(fr)
             touch(fr)
@@ -114,9 +114,9 @@ function main()
         datafile = open(fr, "a")
         for iter in 1:sample
             for r in LinearIndices(lattice_b)
-                acc += heathbath!(lattice_b, r, mhat, Nt_b, Ns_b)
+                acc += heathbathd!(lattice_b, r, mhat, Nt_b, Ns_b)
                 for _ in 1:orsteps
-                    acc += overrelax!(lattice_b, r, mhat, Nt_b, Ns_b)
+                    acc += overrelaxd!(lattice_b, r, mhat, Nt_b, Ns_b)
                 end
             end
 
@@ -124,7 +124,7 @@ function main()
                 obs1d_b = O1d(stvol_b, mhat, lattice_b)
                 obs2d_b = O2d(stvol_b, Nt_b, Ns_b, lattice_b)
                 obs3d_b = O3d(stvol_b, Nt_b, lattice_b)
-                writdedlm(datafile, [obs1d_b obs2d_b obs3d_b ], " ")
+                writedlm(datafile, [obs1d_b obs2d_b obs3d_b], " ")
             end
         end
         close(datafile)

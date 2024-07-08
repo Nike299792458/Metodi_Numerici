@@ -11,14 +11,16 @@ path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
 ratio= 4
 sample= 100000
-Nt=4
-Nt_b=16
-doublers= false
+#Nt=4
+#Nt_b=16
+doublers= true
 p1=plot()
 p2=plot()
+p3=plot()
+p4=plot()
 
 
-
+#=
 #T≠m
 fname= @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
 lines = readlines(fname)
@@ -38,8 +40,8 @@ obs1v_r= [parse(Float64, split(line, ',')[5]) for line in lines[2:end]]
 x=Tonm
 scatter!(p2, x, obs1_r, yerr=obs1v_r, label=" ( ϵ - P)/T^2 ")
 display(p2)
+=#
 
-#=
 #T=m  
 temporal_division=[4,5,6,7,8,10]
 ϵ_norm = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -48,8 +50,19 @@ x =[]
 push!(x, temporal_division .^(-2))
 
 for i= 1:length(temporal_division)
-    println(i)
+    local Nt = temporal_division[i]
+    local Nt_b= Nt*ratio
+    local fname= @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
+    local lines = readlines(fname)
+    line = lines[2]
+    ϵ_norm[i]= parse(Float64, split(line, ',')[2])  
+    ϵ_normv[i]= parse(Float64, split(line, ',')[3]) 
 end
+
+
+scatter!(p3, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
+display(p3)
+#doublers
 for i= 1:length(temporal_division)
     local Nt = temporal_division[i]
     local Nt_b= Nt*ratio
@@ -61,6 +74,6 @@ for i= 1:length(temporal_division)
 end
 
 println(ϵ_norm)
-scatter!(p, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
-display(p2)
-=#
+scatter!(p4, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
+display(p4)
+

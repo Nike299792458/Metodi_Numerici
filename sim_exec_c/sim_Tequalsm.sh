@@ -3,8 +3,8 @@
 path="../simulations_c/"
 sample=5000000
 # Array to loop over
-Nt=( 6 8 10)
-ratio=4
+Nt=(4 6 8 10)
+ratio=6
 
 
 for Nti in "${Nt[@]}"

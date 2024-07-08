@@ -5,7 +5,7 @@ Osservabili con discretizzzazione sbagliata, heathbath, metropolis, microcanonic
 notazione: stvol= spacetime volume, STDIM spacetime dimensionality
 le funzioni contrassegnate come _v sono una prova di implementazione vettoriale, ma non hanno portato a risulati compatibili 
 =#
-STDIM = 
+STDIM = 2
 
 #O1 = 1/(Nt*Ns^{STDIM-1}) Σ_n (mhat^2 ϕ_n^2)
 function O1d(stvol::Int, mhat::Float64, lattice::Array{Float64})
@@ -25,7 +25,7 @@ function O2d(stvol::Int, Nt::Int ,Ns::Int, lattice::Array{Float64})
     for r in LinearIndices(lattice)
         i=mod1(r,Nt)
         j=cld(r,Nt)
-        aux=l(attice[i, mod1(j+1, Ns)] - lattice[i,mod1(j-1, Ns)])/2
+        aux=(lattice[i, mod1(j+1, Ns)] - lattice[i,mod1(j-1, Ns)])/2
         ris = ris + aux*aux
     end
     ris=ris/stvol
