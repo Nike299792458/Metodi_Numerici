@@ -9,6 +9,10 @@ function parse_cmd()
             help = "Ratio between spatial and temporal size of the lattice"
             required = true
             arg_type = Int
+        "Nt"
+            help = "temporal division"
+            required = true
+            arg_type = Int
         "sample"
             help = "Number of steps in the simulation"
             required = true
@@ -26,36 +30,41 @@ end
 function main()
     parsed_args = parse_cmd()
     ratio = parsed_args["ratio"]
+    Nt = parsed_args["Nt"]
     sample = parsed_args["sample"]
     path = parsed_args["path"]
-   
 
-    
-    println(@sprintf "Starting simulation: sample=%.1e ratio=%.i " sample ratio )
+    #simulation parameters (T/m independant)
+    Ns=ratio*Nt
+    stvol=Nt #stvol=Nt*Ns^{STDIM-1}
+    for i in 1:(STDIM-1)
+         stvol=stvol*Ns
+     end
 
-    timestamps=[4,5,6,7,8,10]
-    for Nt in timestamps
-        Ns=ratio*Nt
+    Nt_b = ratio*Nt
+    Ns_b = Ns
+    stvol_b = Nt_b # stvol=Nt*Ns^{STDIM-1}
+    for i in 1:(STDIM-1)
+        stvol_b = stvol_b * Ns_b
+    end
+
+    #generic
+    orsteps = 5
+    measevery = 5
+
+    println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
+    Tonm =[1] #when simulating T=m
+    for T_norm in Tonm
         # initializing...
-        lattice = zeros(Float64, Nt,Ns)
-        acc = 0
+        lattice = zeros(Float64, Nt ,Ns)
+        acc=0
+        mhat=1/(Nt*T_norm)
         
-        
-        # simulation parameters
-        orsteps = 5
-        measevery = 10
-        Nt_bar= 1000000 
-        mhat=1/Nt
-        stvol=Nt #stvol=Nt*Ns^{STDIM-1}
-        stvol_bar= Ns*Nt_bar
-        for i in 1:(STDIM-1)
-            stvol=stvol*Ns
-        end
         # files management
         if !isdir(path)
             mkpath(path)
         end
-        fname = @sprintf "free_scalar_th_sample=%.1eratio=%.iNt=%2.2iNs=%2.2i.txt" sample ratio Nt Ns
+        fname = @sprintf "fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=%2.2f.txt"  sample ratio Nt T_norm
         fr = joinpath([path, fname])
         if !isfile(fr)
             touch(fr)
@@ -69,23 +78,62 @@ function main()
         datafile = open(fr, "a")
         for iter in 1:sample
             for r in LinearIndices(lattice)
-                acc+=heathbathd!(lattice, r, mhat, Nt, Ns)
+                acc+=heathbath!(lattice, r, mhat, Nt, Ns)
                 for _ in 1:orsteps
-                    acc+=overrelaxd!(lattice, r, mhat, Nt, Ns)
+                    acc+=overrelax!(lattice, r, mhat, Nt, Ns)
                 end
             end
 
             if iter%measevery == 0
-                obs1 = O1d(stvol, mhat,lattice)-O1d(stvol_bar, mhat,lattice)
-                obs2 = O2d(stvol, Nt,lattice)-O2d(stvol_bar, Nt_bar,lattice)
-                obs3 = O3d(stvol,lattice)-O3d(stvol_bar,lattice)
-                writedlm(datafile, [obs1 obs2 obs3], " ")
+                obs1d = O1d(stvol, mhat,lattice)
+                obs2d = O2d(stvol, Nt, Ns, lattice)
+                obs3d = O3d(stvol, Nt, lattice)
+                writedlm(datafile, [obs1d obs2d obs3d ], " ")
             end
             
         end
         close(datafile)
-        elapsed = Dates.canonicalize(Dates.round((now()-start), Dates.Second))
-        println("\n$(round(now(), Dates.Second));\nNₜ = $Nt,Ns = $Ns, elapsed time $(elapsed)\n")
+
+        lattice_b = zeros(Float64, Nt_b, Ns_b)
+        acc = 0
+
+        # files management
+        if !isdir(path)
+            mkpath(path)
+        end
+        fname = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=%2.2f.txt" , sample, ratio, Nt_b, Nt, T_norm)
+        fr = joinpath([path, fname])
+        if !isfile(fr)
+            touch(fr)
+        end
+        # writing header
+        open(fr, "w") do infile
+            writedlm(infile, ["obs1d_b" "obs2d_b" "obs3d_b"], " ")
+        end
+
+        datafile = open(fr, "a")
+        for iter in 1:sample
+            for r in LinearIndices(lattice_b)
+                acc += heathbath!(lattice_b, r, mhat, Nt_b, Ns_b)
+                for _ in 1:orsteps
+                    acc += overrelax!(lattice_b, r, mhat, Nt_b, Ns_b)
+                end
+            end
+
+            if iter % measevery == 0
+                obs1d_b = O1d(stvol_b, mhat, lattice_b)
+                obs2d_b = O2d(stvol_b, Nt_b, Ns_b, lattice_b)
+                obs3d_b = O3d(stvol_b, Nt_b, lattice_b)
+                writdedlm(datafile, [obs1d_b obs2d_b obs3d_b ], " ")
+            end
+        end
+        close(datafile)
+
+        elapsed = Dates.canonicalize(Dates.round((now() - start), Dates.Second))
+        println("\n$(round(now(), Dates.Second));\nNₜ = $Nt,Tonm = $T_norm, elapsed time $(elapsed)\n")
     end
+    
 end
 main()
+
+
