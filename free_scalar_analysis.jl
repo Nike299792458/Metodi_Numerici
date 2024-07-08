@@ -63,6 +63,10 @@ function main()
     ϵ_normv = []
     ϵ_normv_b =[]
     ϵ_normv_r = []
+    obs1 = []
+    obs1_v = []
+    obs1_b = []
+    obs1_v_b = []
 
 
 
@@ -83,6 +87,8 @@ function main()
         push!(Tonm , T_norm)
         push!(ϵ_norm , Nt*Nt*mean(sum_obs_j)/2)
         push!(ϵ_normv , std(sum_obs_j, corrected = false).*sqrt(length(sum_obs_j)-1))
+        push!(obs1 , mean(O1_j))
+        push!(obs1_v , std(O1_j, corrected = false).*sqrt(length(O1_j)-1))
 
     end
 
@@ -105,7 +111,8 @@ function main()
         
         push!(ϵ_norm_b, Nt*Nt*mean(sum_obs_b_j)/2)
         push!(ϵ_normv_b, std(sum_obs_b_j, corrected = false).*sqrt(length(sum_obs_b_j)-1))
-
+        push!(obs1_b , mean(O1_b_j))
+        push!(obs1_v_b , std(O1_b_j, corrected = false).*sqrt(length(O1_b_j)-1))
 
     end
     ϵ_norm_r= ϵ_norm - ϵ_norm_b

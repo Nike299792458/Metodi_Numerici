@@ -54,12 +54,13 @@ function main()
     measevery = 5
 
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
-    Tonm =[1] #when simulating T=m
-    #Tonm = collect(range(0.1, stop=2.5, length=15)) #Otherwise
+    #Tonm =[1] #when simulating T=m
+    Tonm = collect(range(0.1, stop=2.5, length=15)) #Otherwise
     for T_norm in Tonm
         # initializing...
         lattice = zeros(Float64, Nt ,Ns)
         acc=0
+        mhat=1/(Nt*T_norm)
         
         # files management
         if !isdir(path)
@@ -129,13 +130,10 @@ function main()
             end
         end
         close(datafile)
-
-        
-        elapsed = Dates.canonicalize(Dates.round((now() - start), Dates.Second))
-        println("\n$(round(now(), Dates.Second));\nNₜ = $Nt,Ns = $Ns, elapsed time $(elapsed)\n")
-        
+   
     end
-    
+    elapsed = Dates.canonicalize(Dates.round((now() - start), Dates.Second))
+    println("\n$(round(now(), Dates.Second));\nNₜ = $Nt,Ns = $Ns, elapsed time $(elapsed)\n")
 end
 main()
 

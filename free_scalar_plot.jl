@@ -10,9 +10,9 @@ margin=5Plots.mm
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
 ratio= 4
-sample= 5000000
-Nt=5
-Nt_b=20
+sample= 100000
+Nt=4
+Nt_b=16
 doublers= false
 p1=plot()
 p2=plot()
