@@ -11,6 +11,8 @@ path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
 ratio= 4
 sample= 5000000
+Nt=5
+Nt_b=20
 doublers= false
 p1=plot()
 p2=plot()
@@ -24,13 +26,13 @@ Tonm = [parse(Float64, split(line, ',')[1]) for line in lines[2:end]]
 ϵ_norm= [parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
 ϵ_normv= [parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
 x=Tonm
-scatter!(p, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
+scatter!(p1, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
 display(p1)
 
 
 
 
-
+#=
 #T=m  
 temporal_division=[4,5,6,7,8,10]
 ϵ_norm = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -54,4 +56,4 @@ end
 println(ϵ_norm)
 scatter!(p, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
 display(p2)
-
+=#
