@@ -1,7 +1,7 @@
 using LinearAlgebra, Random
 
 STDIM = 2
-function ϕ_fixed_p(lattice, p, Nt, Ns)
+function ϕ_fixed_p(lattice::Array{Float64}, p, Nt::Int, Ns::Int)
     stvol = Nt * Ns^(STDIM-1)
     O = Complex{Float64}[0.0 + 0.0im for _ in 1:Nt]
 
@@ -23,14 +23,20 @@ function ϕ_fixed_p(lattice, p, Nt, Ns)
     return O
 end
 
-function t_corr(lattice, Nt, δt)
+function t_corr(lattice::Array{Float64}, Nt::Int, Ns::Int, δt::Int)
     p = zeros(Float64, STDIM-1)
     corr_p0 = zeros(Float64, δt )
 
-    O = ϕ_fixed_p(lattice, p, Nt, δt)
+    O = ϕ_fixed_p(lattice, p, Nt, Ns)
 
-    corr_p0= dot(O, circshift(O , δt))
-    return corr_p0/Nt
+    for i in 1:δt
+    for j in 1:Nt
+        k = mod1(j+i, Nt)
+        corr_p0[i] += real(conj(O[j]) * O[k])
+    end
+    corr_p0[i] /= Nt
+end
+return corr_p0
 end
 
 function Σ_n(lattice::Array{Float64}, r::Int, Nt::Int, Ns::Int)

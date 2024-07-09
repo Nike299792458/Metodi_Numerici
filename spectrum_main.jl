@@ -51,7 +51,7 @@ function main()
         touch(fr)
     end
     # writing header
-    ct = permutedims(["ct_$ci" for ci in 0:(Nt÷4-1) ])
+    ct = permutedims(["ct_$ci" for ci in 0:Nt÷4-1 ])
     open(fr, "w") do infile
         writedlm(infile, ["t_corr" ct], " ")
     end
@@ -65,13 +65,26 @@ function main()
                     acc+=overrelax!(lattice, r, mhat, Nt, Ns)
                 end
         end
-        corr= [0]
-        if iter%measevery == 0
+        
+        if iter % measevery == 0
+            corr = []
+            reference_length = nothing
             for δt in 0:Nt÷4-1
-                corr = hcat(corr , t_corr(lattice,Nt, δt))
+                result = t_corr(lattice, Nt, Ns, δt)
+                println(sizeof(result))
+                #=
+                if reference_length === nothing
+                    reference_length = length(result)
+                elseif length(result) != reference_length
+                    error("All vectors must have the same length")
+                end
+                push!(corr, result)
+                =#
             end
-            writedlm(datafile, corr, " ")
+            corr_matrix = hcat(corr...)
+            writedlm(datafile, corr_matrix, " ")
         end
+        
         if verbose && iter % (sample÷100) == 0
             print("$((100*iter÷sample))% \r")
         end

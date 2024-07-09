@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#questa va in Ntequals8.log
 path="../simulations_c/Nt=8"
 sample=5000000
 # Array to loop over
@@ -11,5 +12,4 @@ for Nti in "${Nt[@]}"
 do 
 	julia th_free_scalar.jl  "$ratio" "$Nti" "$sample"
 done
-
 

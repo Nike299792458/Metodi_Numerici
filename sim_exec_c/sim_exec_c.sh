@@ -1,16 +1,14 @@
 #!/bin/bash
 
-path="../simulations_c/Nt=10"
+path="../simulations_c/Tequalsm"
 sample=5000000
 # Array to loop over
-#questa va il Ntequals10.log
-Nt=(10)
-ratio=5
+Nt=(4 6 8 )
+ratio=8
 
 
 for Nti in "${Nt[@]}"
 do 
 	julia th_free_scalar.jl  "$ratio" "$Nti" "$sample"
 done
-
-
+#questa va in output.log
