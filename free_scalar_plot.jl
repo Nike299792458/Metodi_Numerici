@@ -10,10 +10,10 @@ margin=5Plots.mm
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
 ratio= 4
-sample= 100000
+sample= 5000000
 #Nt=4
 #Nt_b=16
-doublers= true
+doublers= false
 p1=plot()
 p2=plot()
 p3=plot()
@@ -43,7 +43,7 @@ display(p2)
 =#
 
 #T=m  
-temporal_division=[4,5,6,7,8,10]
+temporal_division=[5,6,8,10]
 ϵ_norm = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 ϵ_norm_v = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 x =[]
