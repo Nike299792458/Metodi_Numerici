@@ -31,9 +31,10 @@ function main()
     sample = parsed_args["sample"]
     path = parsed_args["path"]
     verbose = parsed_args["verbose"]
-    
+    Ns= 4*Nt
+    mhat=0.5
     # initializing...
-    lattice = zeros(Float64, Nt)
+    lattice = zeros(Float64, Nt, Ns)
     acc = 0.
 
     # simulation parameters
@@ -59,14 +60,15 @@ function main()
     datafile = open(fr, "a")
     for iter in 1:sample
         for r in LinearIndices(lattice)
-                    acc+=heathbath!(lattice, Nt, r)
+                    acc+=heathbath!(lattice, r, mhat, Nt, Ns)
                 for _ in 1:orsteps
-                    acc+=overrelax!(lattice, Nt, r)
+                    acc+=overrelax!(lattice, r, mhat, Nt, Ns)
                 end
         end
 
         if iter%measevery == 0
-            toprint = [ϕ_fixed_p(lattice, p, Nt)]
+            p = zeros(Float64, STDIM-1)
+            toprint = [ϕ_fixed_p(lattice, p, Nt, Ns)]
             for δt in 0:Nt÷4-1
                 toprint = hcat(toprint, t_corr(lattice, δt))
             end

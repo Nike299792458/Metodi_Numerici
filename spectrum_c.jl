@@ -1,7 +1,7 @@
-using LinearAlgebra, Complex, Random
+using LinearAlgebra, Random
 
 STDIM = 2
-function ϕ_fixed_p(lattice, p, Nt)
+function ϕ_fixed_p(lattice, p, Nt, Ns)
     stvol = Nt * Ns^(STDIM-1)
     O = Complex{Float64}[0.0 + 0.0im for _ in 1:Nt]
 
@@ -9,10 +9,10 @@ function ϕ_fixed_p(lattice, p, Nt)
         i=mod1(r,Nt)
         j=cld(r,Nt)
         sum = 0.0
-        for i in 2:STDIM
-            sum += p[i-1] * coord[i]
+        for j in 1:Ns
+            sum += p[i] * j
         end
-        O[coord[1]+1] += lattice[r] * exp(-1im * sum)  
+        O[i] += lattice[r] * exp(-1im * sum)  
     end
 
     for i in 1:Nt
@@ -20,7 +20,7 @@ function ϕ_fixed_p(lattice, p, Nt)
     end
     return O
 end
-
+#fino a qui ok
 function t_corr(lattice, δt)
     p = zeros(Float64, STDIM-1)
     corr_p0 = zeros(Float64, div(Nt, 4))
@@ -30,6 +30,13 @@ function t_corr(lattice, δt)
     corr_p0= dot(O, circshift(O , δt))
     return corr_p0/Nt
 end
+
+function Σ_n(lattice::Array{Float64}, r::Int, Nt::Int, Ns::Int)
+    i=mod1(r,Nt)
+    j=cld(r,Nt)
+    lattice[mod1(i+1, Nt), j] + lattice[mod1(i-1, Nt), j] + lattice[i, mod1(j+1, Ns)] + lattice[i, mod1(j-1, Ns)]
+end
+    
 
 function heathbath!(lattice::Array{Float64}, r::Int, mhat::Float64, Nt::Int, Ns::Int)
     std = 1.0/sqrt(mhat*mhat+2.0*STDIM)
