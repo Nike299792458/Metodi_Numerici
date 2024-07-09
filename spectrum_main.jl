@@ -31,7 +31,7 @@ function main()
     sample = parsed_args["sample"]
     path = parsed_args["path"]
     verbose = parsed_args["verbose"]
-    Ns= 4*Nt
+    Ns= Nt
     mhat=0.5
     # initializing...
     lattice = zeros(Float64, Nt, Ns)
@@ -51,9 +51,9 @@ function main()
         touch(fr)
     end
     # writing header
-    cs = permutedims(["c$(Int(di))_$ci" for ci in 0:(Nt÷4-1) for di in 1:4])
+    ct = permutedims(["ct_$ci" for ci in 0:(Nt÷4-1) ])
     open(fr, "w") do infile
-        writedlm(infile, ["t_corr" cs], " ")
+        writedlm(infile, ["t_corr" ct], " ")
     end
     
     start = now()
@@ -65,14 +65,12 @@ function main()
                     acc+=overrelax!(lattice, r, mhat, Nt, Ns)
                 end
         end
-
+        corr= [0]
         if iter%measevery == 0
-            p = zeros(Float64, STDIM-1)
-            toprint = [ϕ_fixed_p(lattice, p, Nt, Ns)]
             for δt in 0:Nt÷4-1
-                toprint = hcat(toprint, t_corr(lattice, δt))
+                corr = hcat(corr , t_corr(lattice,Nt, δt))
             end
-            writedlm(datafile, toprint, " ")
+            writedlm(datafile, corr, " ")
         end
         if verbose && iter % (sample÷100) == 0
             print("$((100*iter÷sample))% \r")

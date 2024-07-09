@@ -10,7 +10,9 @@ function ϕ_fixed_p(lattice, p, Nt, Ns)
         j=cld(r,Nt)
         sum = 0.0
         for j in 1:Ns
-            sum += p[i] * j
+            for k in 1:(STDIM-1)
+             sum += p[k]* j
+            end
         end
         O[i] += lattice[r] * exp(-1im * sum)  
     end
@@ -20,12 +22,12 @@ function ϕ_fixed_p(lattice, p, Nt, Ns)
     end
     return O
 end
-#fino a qui ok
-function t_corr(lattice, δt)
-    p = zeros(Float64, STDIM-1)
-    corr_p0 = zeros(Float64, div(Nt, 4))
 
-    O = ϕ_fixed_p(lattice, p, Nt, Sδt)
+function t_corr(lattice, Nt, δt)
+    p = zeros(Float64, STDIM-1)
+    corr_p0 = zeros(Float64, δt )
+
+    O = ϕ_fixed_p(lattice, p, Nt, δt)
 
     corr_p0= dot(O, circshift(O , δt))
     return corr_p0/Nt
@@ -44,7 +46,7 @@ function heathbath!(lattice::Array{Float64}, r::Int, mhat::Float64, Nt::Int, Ns:
     lattice[r] = avg+std*randn()
 
     return 1
-end
+end 
 
 function overrelax!(lattice::Array{Float64}, r::Int, mhat::Float64, Nt::Int, Ns::Int)
     avg =  Σ_n(lattice, r, Nt, Ns)/(mhat*mhat+2.0*STDIM)

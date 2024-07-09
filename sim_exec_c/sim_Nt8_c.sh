@@ -1,9 +1,9 @@
 #!/bin/bash
 
-path="../simulations_c/"
+path="../simulations_c/Nt=8"
 sample=5000000
 # Array to loop over
-Nt=(4 6 8 10)
+Nt=(8)
 ratio=5
 
 
