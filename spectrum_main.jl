@@ -51,7 +51,7 @@ function main()
         touch(fr)
     end
     # writing header
-    ct = permutedims(["ct_$ci" for ci in 0:Nt÷4-1 ])
+    ct = permutedims(["ct_$ci" for ci in 0:Nt÷4 ])
     open(fr, "w") do infile
         writedlm(infile, ["t_corr" ct], " ")
     end
@@ -67,21 +67,11 @@ function main()
         end
         
         if iter % measevery == 0
-            corr = []
-            reference_length = nothing
-            for δt in 0:Nt÷4-1
-                result = t_corr(lattice, Nt, Ns, δt)
-                println(sizeof(result))
-                #=
-                if reference_length === nothing
-                    reference_length = length(result)
-                elseif length(result) != reference_length
-                    error("All vectors must have the same length")
-                end
-                push!(corr, result)
-                =#
-            end
-            corr_matrix = hcat(corr...)
+            corr_matrix = []
+            result = t_corr(lattice, Nt, Ns, δt)
+            println(sizeof(result))
+            push!(corr_matrix, result)
+                
             writedlm(datafile, corr_matrix, " ")
         end
         

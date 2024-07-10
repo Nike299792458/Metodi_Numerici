@@ -1,6 +1,6 @@
 #!/bin/bash
 
-path="../simulations_c/Nt=10"
+path="../simulations_c/'Nt=10'"
 sample=5000000
 # Array to loop over
 #questa va il Ntequals10.log

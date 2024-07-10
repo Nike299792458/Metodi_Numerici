@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #questa va in Ntequals8.log
-path="../simulations_c/Nt=8"
+path="../simulations_c/'Nt=8'"
 sample=5000000
 # Array to loop over
 Nt=(8)
