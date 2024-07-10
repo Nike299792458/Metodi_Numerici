@@ -35,21 +35,24 @@ function main()
     sample = parsed_args["sample"]
     startp = @sprintf "spectrum_sample=%.1e" sample
     paths = filter(startswith(startp), readdir(path))
+    Tonm=5
     Nt=60
+    Ns=10
+    mhat=1/(Nt*Tonm)
 
     for fname in paths
         local w = open(joinpath([path, fname]), "r") do io
-            #readdlm(io, delim= " ", header = true)
-            readdlm(io, ' ',  header = true)
+            readdlm(io, header = true)
         end
-        
-        # Estrazione della matrice cormat
-        println("arrivo qui")
-        cormat = w[1][therm+1:end,1:end-2]#serve il -2 altrimenti prende uno spazio, che nel file però non c'è 
-        println(cormat[1,:])
 
-        println(typeof(cormat))
-        println(size(cormat,2))
+        spacing=Vector{Int}()
+        for el in w[2][2:end]
+            append!(spacing, parse(Int, el[4:end]))
+        end
+
+        # Estrazione della matrice cormat
+        cormat = w[1][therm+1:end,1:end]#serve il -2 altrimenti prende uno spazio, che nel file però non c'è 
+        
         # Creazione dell'array datajack con le dimensioni adeguate
         datajack = zeros(size(cormat, 1) ÷ blocksize, size(cormat, 2))
         println(typeof(datajack))
@@ -58,18 +61,25 @@ function main()
         for i in 1:size(cormat, 2)
             datajack[:, i] = JackKnife(cormat[:, i], blocksize)
         end
-
-        spacing = collect(0:div(Nt, 4))
+       
         gaps = log.(datajack./circshift(datajack, (0,-4)))
         errs = std(gaps, dims = 1, corrected = false).*sqrt(size(datajack,1)-1)
         gaps = mean(gaps, dims = 1)
-        sp = spacing[1:end]
+       
+        data = DataFrame(
+            sp = spacing[1:end],
+            gap = gaps[1:end]./mhat,
+            err = errs[1:end]./mhat,
+        )
+        if !isdir(joinpath([path, "data"]))
+            mkpath(joinpath([path, "data"]))
+        end
                 
         f = @sprintf "data_spectrum_sample%.1eNt%i.txt" sample Nt 
         touch(joinpath([path, f]))        
         w = open(joinpath([path, f]), "w") do io
-        writedlm(io, ["spacing"  "gaps" "errs"  ], " ")
-        writedlm(io, [sp gaps errs] , " ")
+        writedlm(io, ["spacing"  "gaps" "errs" ], " ")
+        writedlm(io, collect(eachrow(data)), " ")
         end
     end
 end    

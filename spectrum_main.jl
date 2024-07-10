@@ -31,8 +31,11 @@ function main()
     sample = parsed_args["sample"]
     path = parsed_args["path"]
     verbose = parsed_args["verbose"]
-    Ns= Nt
-    mhat=0.5
+    #Tonm fa le veci di β*h*ω=5
+    Tonm=5
+    Nt=60
+    Ns=10
+    mhat=1/(Nt*Tonm) #mhat che va a 0 è l'analogo di η a 0
     # initializing...
     lattice = zeros(Float64, Nt, Ns)
     acc = 0.
@@ -51,9 +54,9 @@ function main()
         touch(fr)
     end
     # writing header
-    ct = permutedims(["ct_$ci" for ci in 0:Nt÷4 ])
+    ct = permutedims(["ct_$i" for i in 0:Nt÷4-1 ])
     open(fr, "w") do infile
-        writedlm(infile, ["t_corr" ct], " ")
+        writedlm(infile, [ct], " ")
     end
     
     start = now()
@@ -65,13 +68,13 @@ function main()
                     acc+=overrelax!(lattice, r, mhat, Nt, Ns)
                 end
         end
-        
+        #t_corr in δt è un array con l'unica entrata diversa da 0 in posizione δt e si sfrutta questo
         if iter % measevery == 0
-            corr_matrix = []
-            result = t_corr(lattice, Nt, Ns)
-            push!(corr_matrix, result)
-                
-            writedlm(datafile, corr_matrix, " ")
+            corr_matrix = t_corr(lattice, Nt, Ns,1)[1]#Julia inizia a contare da uno corrisponde a δt=0 
+            for δt in 1:Nt÷4-1
+                corr_matrix = hcat(corr_matrix, t_corr(lattice, Nt, Ns,δt)[δt] ) 
+            end
+             writedlm(datafile, corr_matrix, " ")
         end
         
         if verbose && iter % (sample÷100) == 0
