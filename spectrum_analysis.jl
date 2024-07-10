@@ -22,11 +22,7 @@ function parse_cmd()
             default = joinpath(["..", "simulations_c"])
             required = false
             arg_type = String
-        "--name", "-n"
-            help = "the name of data file"
-            default = "data.txt"
-            required = false
-            arg_type = String
+       
     end
     return parse_args(s)
 end
@@ -43,12 +39,13 @@ function main()
 
     for fname in paths
         local w = open(joinpath([path, fname]), "r") do io
-            readdlm(io, header = true)
+            #readdlm(io, delim= " ", header = true)
+            readdlm(io, ' ',  header = true)
         end
-
+        
         # Estrazione della matrice cormat
         println("arrivo qui")
-        cormat = w[1][therm+1:end,1:end-1]#serve il -1 altrimenti prende uno spazio, che nel file però non c'è 
+        cormat = w[1][therm+1:end,1:end-2]#serve il -2 altrimenti prende uno spazio, che nel file però non c'è 
         println(cormat[1,:])
 
         println(typeof(cormat))
@@ -66,13 +63,13 @@ function main()
         gaps = log.(datajack./circshift(datajack, (0,-4)))
         errs = std(gaps, dims = 1, corrected = false).*sqrt(size(datajack,1)-1)
         gaps = mean(gaps, dims = 1)
-        sp = spacing[1:end-1]
+        sp = spacing[1:end]
                 
         f = @sprintf "data_spectrum_sample%.1eNt%i.txt" sample Nt 
         touch(joinpath([path, f]))        
         w = open(joinpath([path, f]), "w") do io
-        writedlm(io, ["spacing"  "gaps" "errs"  ], ",")
-        writedlm(io, [sp gaps errs] , ",")
+        writedlm(io, ["spacing"  "gaps" "errs"  ], " ")
+        writedlm(io, [sp gaps errs] , " ")
         end
     end
 end    

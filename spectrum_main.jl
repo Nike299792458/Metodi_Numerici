@@ -68,8 +68,7 @@ function main()
         
         if iter % measevery == 0
             corr_matrix = []
-            result = t_corr(lattice, Nt, Ns, δt)
-            println(sizeof(result))
+            result = t_corr(lattice, Nt, Ns)
             push!(corr_matrix, result)
                 
             writedlm(datafile, corr_matrix, " ")
