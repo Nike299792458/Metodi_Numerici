@@ -1,4 +1,4 @@
-using ArgParse, DelimitedFiles, LinearAlgebra, Printf, Statistics, Plots, DataFrames
+using ArgParse, DelimitedFiles, LinearAlgebra, Printf, Statistics, DataFrames
 include("spectrum_c.jl")
 
 function parse_cmd()
