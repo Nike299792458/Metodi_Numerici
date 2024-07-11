@@ -31,11 +31,9 @@ function main()
     sample = parsed_args["sample"]
     path = parsed_args["path"]
     verbose = parsed_args["verbose"]
-    #Tonm fa le veci di β*h*ω=5
-    Tonm=5
-    Nt=60
-    Ns=10
-    mhat=1/(Nt*Tonm) #mhat che va a 0 è l'analogo di η a 0
+    Ns=5
+    mhat=1.0
+    Tonm=1/(Nt*mhat)#devo andare a T basse per stare sul fondamentale
     # initializing...
     lattice = zeros(Float64, Nt, Ns)
     acc = 0.
@@ -60,28 +58,32 @@ function main()
     end
     
     start = now()
-    datafile = open(fr, "a")
-    for iter in 1:sample
-        for r in LinearIndices(lattice)
-                    acc+=heathbath!(lattice, r, mhat, Nt, Ns)
-                for _ in 1:orsteps
-                    acc+=overrelax!(lattice, r, mhat, Nt, Ns)
-                end
-        end
-        #t_corr in δt è un array con l'unica entrata diversa da 0 in posizione δt e si sfrutta questo
-        if iter % measevery == 0
-            corr_matrix = t_corr(lattice, Nt, Ns,1)[1]#Julia inizia a contare da uno corrisponde a δt=0 
-            for δt in 1:Nt÷4-1
-                corr_matrix = hcat(corr_matrix, t_corr(lattice, Nt, Ns,δt)[δt] ) 
+    open(fr, "a") do file
+        for iter in 1:sample
+            acc=0
+            for r in LinearIndices(lattice)
+                        acc+=heathbath!(lattice, r, mhat, Nt, Ns)
+                    for _ in 1:orsteps
+                        acc+=overrelax!(lattice, r, mhat, Nt, Ns)
+                    end
             end
-             writedlm(datafile, corr_matrix, " ")
-        end
-        
-        if verbose && iter % (sample÷100) == 0
-            print("$((100*iter÷sample))% \r")
-        end
+            #t_corr in δt è un array con l'unica entrata diversa da 0 in posizione δt e si sfrutta questo
+            if iter % measevery == 0
+                #=
+                corr_matrix = t_corr(lattice, Nt, Ns,1)[1]#Julia inizia a contare da uno corrisponde a δt=0 
+                for δt in 1:Nt÷4-1
+                    corr_matrix = hcat(corr_matrix, t_corr(lattice, Nt, Ns,δt)[δt] ) 
+                end
+                =#
+                corr_matrix=t_corr(lattice, Nt, Ns)
+                line = join(corr_matrix, " ")
+                write(file, line * "\n")
+            end
+            if verbose && iter % (sample÷100) == 0
+                print("$((100*iter÷sample))% \r")
+            end
+        end    
     end
-    close(datafile)
     elapsed = Dates.canonicalize(Dates.round((now()-start), Dates.Second))
     println("\n$(round(now(), Dates.Second));\nNₜ = $Nt, elapsed time $(elapsed)\n")
 end

@@ -5,6 +5,10 @@ function parse_cmd()
     s = ArgParseSettings()
 
     @add_arg_table s begin
+        "Nt"
+        help = "the number of time steps"
+        required = true
+        arg_type = Int
         "sample"
             help = "Number of steps in the simulation"
             required = true
@@ -29,40 +33,37 @@ end
 
 function main()
     parsed_args = parse_cmd()
+    Nt = parsed_args["Nt"]
     path = parsed_args["path"]
     blocksize = parsed_args["blocksize"]
     therm = parsed_args["therm"]
     sample = parsed_args["sample"]
-    startp = @sprintf "spectrum_sample=%.1e" sample
+    startp = @sprintf "spectrum_sample=%.1eNt=%i" sample Nt
     paths = filter(startswith(startp), readdir(path))
-    Tonm=5
-    Nt=60
-    Ns=10
-    mhat=1/(Nt*Tonm)
-
+    Ns=5
+    mhat=1.0
+    Tonm=1/(Nt*mhat)
+    
     for fname in paths
         local w = open(joinpath([path, fname]), "r") do io
             readdlm(io, header = true)
         end
 
         spacing=Vector{Int}()
-        for el in w[2][2:end]
+        for el in w[2][1:end]
             append!(spacing, parse(Int, el[4:end]))
+
         end
 
         # Estrazione della matrice cormat
-        cormat = w[1][therm+1:end,1:end]#serve il -2 altrimenti prende uno spazio, che nel file però non c'è 
-        
+        cormat = w[1][therm+1:end,1:end] 
         # Creazione dell'array datajack con le dimensioni adeguate
         datajack = zeros(size(cormat, 1) ÷ blocksize, size(cormat, 2))
-        println(typeof(datajack))
-
         # Popolamento di datajack usando la funzione JackKnife
         for i in 1:size(cormat, 2)
             datajack[:, i] = JackKnife(cormat[:, i], blocksize)
         end
-       
-        gaps = log.(datajack./circshift(datajack, (0,-4)))
+        gaps = log.(datajack./circshift(datajack, (0,-1)))
         errs = std(gaps, dims = 1, corrected = false).*sqrt(size(datajack,1)-1)
         gaps = mean(gaps, dims = 1)
        

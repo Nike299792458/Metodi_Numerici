@@ -23,21 +23,21 @@ function ϕ_fixed_p(lattice::Array{Float64}, p, Nt::Int, Ns::Int)
     return O
 end
 
-function t_corr(lattice::Array{Float64}, Nt::Int, Ns::Int,δt::Int )
+function t_corr(lattice::Array{Float64}, Nt::Int, Ns::Int )
     p = zeros(Float64, STDIM-1)
     corr_p0 = zeros(Float64, Nt÷4)
 
     O = ϕ_fixed_p(lattice, p, Nt, Ns)
 
-    #for i in 1:div(Nt,4)
-    for j in 1:Nt
-       # k = mod1(j+i, Nt)
-        k = mod1(j+δt+1, Nt)
-        corr_p0[δt+1] += real(conj(O[j]) * O[k])
+    for δt in 0:Nt ÷ 4-1
+        for j in 1:Nt
+        # k = mod1(j+i, Nt)
+            k = mod1(j+δt+1, Nt)
+            corr_p0[δt+1] += real(conj(O[j]) * O[k])
+        end
+        corr_p0[δt+1] /= Nt
     end
-    corr_p0[δt+1] /= Nt
-#end
-return corr_p0
+    return corr_p0
 end
 
 function Σ_n(lattice::Array{Float64}, r::Int, Nt::Int, Ns::Int)
