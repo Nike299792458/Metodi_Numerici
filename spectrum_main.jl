@@ -67,14 +67,8 @@ function main()
                         acc+=overrelax!(lattice, r, mhat, Nt, Ns)
                     end
             end
-            #t_corr in δt è un array con l'unica entrata diversa da 0 in posizione δt e si sfrutta questo
+            
             if iter % measevery == 0
-                #=
-                corr_matrix = t_corr(lattice, Nt, Ns,1)[1]#Julia inizia a contare da uno corrisponde a δt=0 
-                for δt in 1:Nt÷4-1
-                    corr_matrix = hcat(corr_matrix, t_corr(lattice, Nt, Ns,δt)[δt] ) 
-                end
-                =#
                 corr_matrix=t_corr(lattice, Nt, Ns)
                 line = join(corr_matrix, " ")
                 write(file, line * "\n")
