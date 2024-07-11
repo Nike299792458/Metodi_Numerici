@@ -32,7 +32,7 @@ function main()
     path = parsed_args["path"]
     verbose = parsed_args["verbose"]
     Ns=5
-    mhat=1.0
+    mhat=0.01
     Tonm=1/(Nt*mhat)#devo andare a T basse per stare sul fondamentale
     # initializing...
     lattice = zeros(Float64, Nt, Ns)
@@ -40,7 +40,7 @@ function main()
 
     # simulation parameters
     orsteps = 5
-    measevery = 10
+    measevery = 50
 
     # files management
     if !isdir(path)
