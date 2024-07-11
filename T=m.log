@@ -1,0 +1,84 @@
+ERROR: LoadError: UndefVarError: `start` not defined
+Stacktrace:
+ [1] main()
+   @ Main ~/uni/Magistrale/MetodiNumerici/coding_c/th_free_scalar.jl:134
+ [2] top-level scope
+   @ ~/uni/Magistrale/MetodiNumerici/coding_c/th_free_scalar.jl:139
+in expression starting at /Users/nicoletognetti/uni/Magistrale/MetodiNumerici/coding_c/th_free_scalar.jl:139
+Starting simulation: sample=5.0e+06 ratio=8 Nt=4 
+
+[11410] signal (15): Terminated: 15
+in expression starting at /Users/nicoletognetti/uni/Magistrale/MetodiNumerici/coding_c/th_free_scalar.jl:139
+heathbath! at /Users/nicoletognetti/uni/Magistrale/MetodiNumerici/coding_c/free_scalar.jl:77
+main at /Users/nicoletognetti/uni/Magistrale/MetodiNumerici/coding_c/th_free_scalar.jl:119
+unknown function (ip: 0x10a6cdec1)
+_jl_invoke at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:0 [inlined]
+ijl_apply_generic at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:3077
+jl_apply at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/./julia.h:1982 [inlined]
+do_call at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/interpreter.c:126
+eval_body at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/interpreter.c:0
+jl_interpret_toplevel_thunk at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/interpreter.c:775
+jl_toplevel_eval_flex at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/toplevel.c:934
+jl_toplevel_eval_flex at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/toplevel.c:877
+ijl_toplevel_eval at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/toplevel.c:943 [inlined]
+ijl_toplevel_eval_in at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/toplevel.c:985
+eval at ./boot.jl:385 [inlined]
+include_string at ./loading.jl:2076
+_jl_invoke at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:0 [inlined]
+ijl_apply_generic at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:3077
+_include at ./loading.jl:2136
+include at ./Base.jl:495
+jfptr_include_46536.1 at /Users/nicoletognetti/.julia/juliaup/julia-1.10.4+0.x64.apple.darwin14/lib/julia/sys.dylib (unknown line)
+_jl_invoke at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:0 [inlined]
+ijl_apply_generic at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:3077
+exec_options at ./client.jl:318
+_start at ./client.jl:552
+jfptr__start_82849.1 at /Users/nicoletognetti/.julia/juliaup/julia-1.10.4+0.x64.apple.darwin14/lib/julia/sys.dylib (unknown line)
+_jl_invoke at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:0 [inlined]
+ijl_apply_generic at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:3077
+jl_apply at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/./julia.h:1982 [inlined]
+true_main at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/jlapi.c:582
+jl_repl_entrypoint at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/jlapi.c:731
+unknown function (ip: 0x0)
+Allocations: 55546488166 (Pool: 55546483154; Big: 5012); GC: 19380
+Starting simulation: sample=5.0e+06 ratio=8 Nt=6 
+sim_exec_c/sim_exec_c.sh: line 10: 11410 Terminated: 15          julia th_free_scalar.jl "$ratio" "$Nti" "$sample"
+
+[11645] signal (15): Terminated: 15
+in expression starting at /Users/nicoletognetti/uni/Magistrale/MetodiNumerici/coding_c/th_free_scalar.jl:139
+_jl_invoke at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:0 [inlined]
+ijl_apply_generic at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:3077
+overrelax! at /Users/nicoletognetti/uni/Magistrale/MetodiNumerici/coding_c/free_scalar.jl:85
+main at /Users/nicoletognetti/uni/Magistrale/MetodiNumerici/coding_c/th_free_scalar.jl:121
+unknown function (ip: 0x105008ec1)
+_jl_invoke at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:0 [inlined]
+ijl_apply_generic at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:3077
+jl_apply at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/./julia.h:1982 [inlined]
+do_call at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/interpreter.c:126
+eval_body at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/interpreter.c:0
+jl_interpret_toplevel_thunk at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/interpreter.c:775
+jl_toplevel_eval_flex at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/toplevel.c:934
+jl_toplevel_eval_flex at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/toplevel.c:877
+ijl_toplevel_eval at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/toplevel.c:943 [inlined]
+ijl_toplevel_eval_in at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/toplevel.c:985
+eval at ./boot.jl:385 [inlined]
+include_string at ./loading.jl:2076
+_jl_invoke at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:0 [inlined]
+ijl_apply_generic at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:3077
+_include at ./loading.jl:2136
+include at ./Base.jl:495
+jfptr_include_46536.1 at /Users/nicoletognetti/.julia/juliaup/julia-1.10.4+0.x64.apple.darwin14/lib/julia/sys.dylib (unknown line)
+_jl_invoke at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:0 [inlined]
+ijl_apply_generic at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:3077
+exec_options at ./client.jl:318
+_start at ./client.jl:552
+jfptr__start_82849.1 at /Users/nicoletognetti/.julia/juliaup/julia-1.10.4+0.x64.apple.darwin14/lib/julia/sys.dylib (unknown line)
+_jl_invoke at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:0 [inlined]
+ijl_apply_generic at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/gf.c:3077
+jl_apply at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/./julia.h:1982 [inlined]
+true_main at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/jlapi.c:582
+jl_repl_entrypoint at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-grannysmith-C07ZM05NJYVY.0/build/default-grannysmith-C07ZM05NJYVY-0/julialang/julia-release-1-dot-10/src/jlapi.c:731
+unknown function (ip: 0x0)
+Allocations: 555298798 (Pool: 555293786; Big: 5012); GC: 197
+Starting simulation: sample=5.0e+06 ratio=8 Nt=8 
+sim_exec_c/sim_exec_c.sh: line 10: 11645 Terminated: 15          julia th_free_scalar.jl "$ratio" "$Nti" "$sample"

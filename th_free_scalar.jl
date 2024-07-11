@@ -71,6 +71,7 @@ function main()
             touch(fr)
         end
         # writing header
+        
         open(fr, "w") do infile
             writedlm(infile, ["obs1" "obs2" "obs3"], " ")
         end
@@ -94,7 +95,7 @@ function main()
             
         end
         close(datafile)
-
+        
         lattice_b = zeros(Float64, Nt_b, Ns_b)
         acc = 0
 
