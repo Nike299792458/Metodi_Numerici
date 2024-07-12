@@ -53,14 +53,14 @@ function main()
     measevery = 5
 
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
-    #Tonm =[1] #when simulating T=m, ma ora sto correggendo perché manca una simulazione
+    Tonm =[2.5] #when simulating T=m, ma ora sto correggendo perché manca una simulazione
     Tonm = collect(range(1.70, stop=2.5, length=3)) #Otherwise
     for T_norm in Tonm
         # initializing...
         lattice = zeros(Float64, Nt ,Ns)
         acc=0
         mhat=1/(Nt*T_norm)
-        
+        #=
         # files management
         if !isdir(path)
             mkpath(path)
@@ -98,7 +98,7 @@ function main()
         
         lattice_b = zeros(Float64, Nt_b, Ns_b)
         acc = 0
-
+=#
         # files management
         if !isdir(path)
             mkpath(path)
