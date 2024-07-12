@@ -60,7 +60,7 @@ function main()
         lattice = zeros(Float64, Nt ,Ns)
         acc=0
         mhat=1/(Nt*T_norm)
-        #=
+        
         # files management
         if !isdir(path)
             mkpath(path)
@@ -95,7 +95,7 @@ function main()
             
         end
         close(datafile)
- =#       
+     
         lattice_b = zeros(Float64, Nt_b, Ns_b)
         acc = 0
 
