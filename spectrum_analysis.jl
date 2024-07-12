@@ -40,8 +40,8 @@ function main()
     sample = parsed_args["sample"]
     startp = @sprintf "spectrum_sample=%.1eNt=%i" sample Nt
     paths = filter(startswith(startp), readdir(path))
-    Ns=5
-    mhat=1.0
+    Ns=60
+    mhat=0.3
     Tonm=1/(Nt*mhat)
     
     for fname in paths

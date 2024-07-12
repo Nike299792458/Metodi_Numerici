@@ -9,7 +9,7 @@ margin=5Plots.mm
 
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/spectrum_c"
 cd(path)
-sample, Nt= 100000000, 60.
+sample, Nt= 100000, 60.
 fname = @sprintf "data_spectrum_sample%.1eNt%i.txt" sample Nt 
 
 lines = readlines(fname)

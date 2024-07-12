@@ -8,9 +8,9 @@ background_color_legend = nothing,
 margin=5Plots.mm
 )
 
-path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
+path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
 cd(path)
-ratio= 5
+ratio= 4
 sample= 5000000
 Nt=4
 Nt_b=20
@@ -23,6 +23,7 @@ p4=plot()
 
 
 #T≠m
+#=
 fname= @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
 lines = readlines(fname)
 Tonm = [parse(Float64, split(line, ',')[1]) for line in lines[2:end]]
@@ -32,8 +33,6 @@ x=Tonm
 scatter!(p1,ϵ_norm ,Tonm, yerr = ϵ_normv, markershape=:plus, label = "Nt=4")
 xlabel!(p1,"T/m")
 ylabel!(p1,L"\frac{ϵ}{T^2}")
-#ylims!(0.9, 4)
-#annotate!(p, 2.8, 3.33, text(L"Where $A = x^3-\frac{3}{2}x$", :black,:left, 8))
 title!("Termodynamics")
 display(p1)
 
@@ -48,11 +47,10 @@ ylabel!(p2,L"\frac{ϵ-P}{T^2}")
 scatter!(p2,x ,obs1_r, yerr = obs1v_r, markershape=:plus, label = "Nt=4")
 title!("Termodynamics")
 display(p2)
-
+=#
 
 #T=m  
-#=
-temporal_division=[5,6,8,10]
+temporal_division=[6,8,10]
 ϵ_norm = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 ϵ_norm_v = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 x =[]
@@ -86,4 +84,3 @@ println(ϵ_norm)
 scatter!(p4, x, ϵ_norm, yerr=ϵ_normv, label="Dati ")
 display(p4)
 
-=#
