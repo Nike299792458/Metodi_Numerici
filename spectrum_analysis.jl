@@ -72,9 +72,7 @@ function main()
             gap = gaps[1:end]./mhat,
             err = errs[1:end]./mhat,
         )
-        if !isdir(joinpath([path, "data"]))
-            mkpath(joinpath([path, "data"]))
-        end
+       
                 
         f = @sprintf "data_spectrum_sample%.1eNt%i.txt" sample Nt 
         touch(joinpath([path, f]))        

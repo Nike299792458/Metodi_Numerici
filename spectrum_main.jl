@@ -15,7 +15,7 @@ function parse_cmd()
             arg_type = Int
         "--path", "-p"
             help = "the path where files are stored"
-            default = joinpath(["..", "simulations_c"])
+            default = joinpath(["..", "simulations_c", "spectrum_c"])
             required = false
             arg_type = String
         "--verbose", "-v"
@@ -31,8 +31,8 @@ function main()
     sample = parsed_args["sample"]
     path = parsed_args["path"]
     verbose = parsed_args["verbose"]
-    Ns=5
-    mhat=0.01
+    Ns=60
+    mhat=1/3 #mhat<1
     Tonm=1/(Nt*mhat)#devo andare a T basse per stare sul fondamentale
     # initializing...
     lattice = zeros(Float64, Nt, Ns)
