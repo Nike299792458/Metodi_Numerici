@@ -19,7 +19,7 @@ function parse_cmd()
             arg_type = Int
         "--path", "-p"
             help = "The path where files are stored, if simulating T=m /../simulations_c/Tequalsm"
-            default = joinpath(["..", "simulations_c", "'Nt=8'"])
+            default = joinpath(["..", "simulations_c"])
             required = false
             arg_type = String
         
@@ -53,8 +53,8 @@ function main()
     measevery = 5
 
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
-    Tonm =[2.5] #when simulating T=m, ma ora sto correggendo perché manca una simulazione
-    #Tonm = collect(range(0.1, stop=2.5, length=16)) #Otherwise
+    #Tonm =[1] #when simulating T=m, ma ora sto correggendo perché manca una simulazione
+    Tonm = collect(range(1.70, stop=2.5, length=3)) #Otherwise
     for T_norm in Tonm
         # initializing...
         lattice = zeros(Float64, Nt ,Ns)
