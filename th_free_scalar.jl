@@ -95,10 +95,10 @@ function main()
             
         end
         close(datafile)
-        
+ =#       
         lattice_b = zeros(Float64, Nt_b, Ns_b)
         acc = 0
-=#
+
         # files management
         if !isdir(path)
             mkpath(path)
