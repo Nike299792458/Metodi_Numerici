@@ -7,5 +7,5 @@ sample=100000000
 Nt=(60)
 for Nti in "${Nt[@]}"
 do 
-	julia spectrum_main.jl   "$Nti" "$sample"
+	julia spectrum_main.jl   "$Nti" "$sample" "-v"
 done
