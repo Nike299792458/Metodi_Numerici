@@ -1,7 +1,7 @@
 using  DataFrames, DelimitedFiles, LaTeXStrings, Plots, Printf, Statistics
 
 default(fontfamily = "Computer Modern",
-background_color = :white,
+background_color = :transparent,
 foreground_color = :black,
 background_color_legend = nothing,
 margin=5Plots.mm
@@ -20,12 +20,12 @@ t_dist = [parse(Int64, split(line, ' ')[1]) for line in lines[2:end-1]]
 gap= [parse(Float64, split(line, ' ')[2]) for line in lines[2:end-1]]
 gapv= [parse(Float64, split(line, ' ')[3]) for line in lines[2:end-1]]
 
-scatter!(p, t_dist ,gap, yerror=gapv, markershape=:plus, label = " ")
-xlabel!(p,"intervallo temporale")
+scatter!(p, t_dist ,gap, yerror=gapv, markershape=:utriangle, label = " ")
+xlabel!(p,"spacing")
 ylabel!(p,"gaps")
 
 
 title!("Plot of Energy Gaps vs Correlators Spacing")
 
 display(p)
-# savefig(p, "..\\imgs_b\\gaps.png")
+savefig(p, "gaps.png")

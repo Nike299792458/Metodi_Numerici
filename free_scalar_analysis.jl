@@ -33,7 +33,7 @@ function parse_cmd()
             arg_type = Bool
         "--path", "-p"
             help = "The path where files are stored, if simulating T=m /../simulations_c/Tequalsm"
-            default = joinpath([ "..", "simulations_c", "Nt=10"])
+            default = joinpath([ "..", "simulations_c"])
             required = false
             arg_type = String
     end
@@ -51,7 +51,7 @@ function main()
     Nt = parsed_args["Nt"]
     Nt_b=Nt*ratio
     
-    dfname = @sprintf("data_Nt=%2.2i_sample=%.1e_doublers=%i.txt", Nt, sample, doublers)
+   
     startp = @sprintf "fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=" sample ratio Nt 
     #startp = @sprintf "doublers_sample=%.1eratio=%.iNt=%2.2iTonm=" sample ratio Nt 
     paths = filter(startswith(startp), readdir(path))
