@@ -12,8 +12,8 @@ path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/"
 cd(path)
 ratio= 5
 sample= 5000000
-Nt=4
-Nt_b=20
+Nt=8
+Nt_b=40
 
 doublers= false
 p1=plot()
