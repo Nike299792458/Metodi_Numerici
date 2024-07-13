@@ -50,7 +50,7 @@ function main()
 
     #generic
     orsteps = 5
-    measevery = 5
+    measevery = 10
 
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
     Tonm =[1] #when simulating T=m
