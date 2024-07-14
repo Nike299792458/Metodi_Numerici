@@ -8,8 +8,7 @@ background_color_legend = nothing,
 margin=5Plots.mm
 )
 
-path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
-cd(path)
+
 
 sample= 5000000
 
@@ -64,62 +63,40 @@ savefig(p2, "o1suTsquared.png")
 =#
 
 #T=m  
+path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
+cd(path)
 p3=plot()
 
-temporal_division=[5,6,8,10]
-ratio=5
-for (i,Nt) in enumerate(temporal_division)
-    println(i)
-    local Nt_b= Nt*ratio
-    local fname= @sprintf("Tequals_ratio=%.i_sample=%.1e.txt", ratio, sample)
-    local lines = readlines(fname)
-    ϵ_norm=parse(Float64, split(line, ',')[2] for line in lines[2:end])
-    ϵ_normv=parse(Float64, split(line, ',')[3] for line in lines[2:end])  
-end
-push!(x,temporal_division .^(-2) )
-scatter!(p3, x, ϵ_norm, yerr=ϵ_normv, label = "ratio=$ratio")
-#=
-ratio=6
-ϵ_norm= [0.0, 0.0, 0.0, 0.0]
-typeof(ϵ_norm)
-ϵ_normv = [0.0, 0.0, 0.0, 0.0]
-x =[0.0, 0.0, 0.0, 0.0]
-#push!(x, temporal_division .^(-2))
 
-for (i,Nt) in enumerate(temporal_division)
-    println(i)
-    local Nt_b= Nt*ratio
-    local fname= @sprintf("Tequals_ratio=%.iNt=%2.2i_sample=%.1e.txt", ratio, Nt, sample)
-    local lines = readlines(fname)
-    line = lines[2]
-    a=parse(Float64, split(line, ',')[2])
-    b=parse(Float64, split(line, ',')[3]) 
-    c=parse(Int64, split(line, ',')[1]) 
-    c=c^(-2)
-    println(c)
-    x[i]=c
-    ϵ_norm[i]=a
-    ϵ_normv[i]=b
+ratio=[4,5,6]
+for (i,r) in enumerate(ratio)
     
+    fname= @sprintf("Tequals_ratio=%.i_sample=%.1e.txt", r, sample)
+    lines = readlines(fname)
+    temporal_division=[5,6,8,10]
+    #Nt=[parse(Int64, split(line, ',')[1]) for line in lines[2:end]]
+    ϵ_norm=[parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
+    ϵ_normv=[parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
+    x=temporal_division .^(-2)
+    scatter!(p3, x, ϵ_norm, yerr = ϵ_normv, markershape = :utriangle, label = "ratio=$r")  
 end
 
-
-scatter!(p3, x, ϵ_norm, yerr=ϵ_normv, label = "ratio=$ratio")
 display(p3)
-#=
-#=
-#doublers
-for i= 1:length(temporal_division)
-    local Nt = temporal_division[i]
-    local Nt_b= Nt*ratio
-    local fname= @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample)
-    local lines = readlines(fname)
-    line = lines[2]
-    ϵ_norm[i]= parse(Float64, split(line, ',')[2])  
-    ϵ_normv[i]= parse(Float64, split(line, ',')[3]) 
+
+p4=plot()
+
+
+ratio=[5]
+for (i,r) in enumerate(ratio)
+    
+    fname= @sprintf("Doublers_ratio=%.i_sample=%.1e.txt", r, sample)
+    lines = readlines(fname)
+    temporal_division=[5,6,8,10]
+    #Nt=[parse(Int64, split(line, ',')[1]) for line in lines[2:end]]
+    ϵ_norm=[parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
+    ϵ_normv=[parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
+    x=temporal_division .^(-2)
+    scatter!(p4, x, ϵ_norm, yerr = ϵ_normv, markershape = :utriangle, label = "ratio=$r")  
 end
 
-println(ϵ_norm)
-scatter!(p4, x, ϵ_norm, yerr=ϵ_normv, markershape = marker_shapes[i], label = "Nt=$Nt")
 display(p4)
-=#
