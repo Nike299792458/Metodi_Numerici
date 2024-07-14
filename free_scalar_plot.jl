@@ -67,30 +67,18 @@ savefig(p2, "o1suTsquared.png")
 p3=plot()
 
 temporal_division=[5,6,8,10]
-ratio=4
-ϵ_norm= [0.0, 0.0, 0.0, 0.0]
-typeof(ϵ_norm)
-ϵ_normv = [0.0, 0.0, 0.0, 0.0]
-x =[0.0, 0.0, 0.0, 0.0]
-#push!(x, temporal_division .^(-2))
-
+ratio=5
 for (i,Nt) in enumerate(temporal_division)
     println(i)
     local Nt_b= Nt*ratio
-    local fname= @sprintf("Tequals_ratio=%.iNt=%2.2i_sample=%.1e.txt", ratio, Nt, sample)
+    local fname= @sprintf("Tequals_ratio=%.i_sample=%.1e.txt", ratio, sample)
     local lines = readlines(fname)
-    line = lines[2]
-    a=parse(Float64, split(line, ',')[2])
-    b=parse(Float64, split(line, ',')[3]) 
-    c=parse(Int64, split(line, ',')[1]) 
-    c=c^(-2)
-    println(c)
-    x[i]=c
-    ϵ_norm[i]=a
-    ϵ_normv[i]=b
-    
+    ϵ_norm=parse(Float64, split(line, ',')[2] for line in lines[2:end])
+    ϵ_normv=parse(Float64, split(line, ',')[3] for line in lines[2:end])  
 end
+push!(x,temporal_division .^(-2) )
 scatter!(p3, x, ϵ_norm, yerr=ϵ_normv, label = "ratio=$ratio")
+#=
 ratio=6
 ϵ_norm= [0.0, 0.0, 0.0, 0.0]
 typeof(ϵ_norm)
@@ -118,7 +106,7 @@ end
 
 scatter!(p3, x, ϵ_norm, yerr=ϵ_normv, label = "ratio=$ratio")
 display(p3)
-
+#=
 #=
 #doublers
 for i= 1:length(temporal_division)

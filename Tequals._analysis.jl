@@ -1,4 +1,5 @@
 using ArgParse, DelimitedFiles, LinearAlgebra, Printf, Statistics
+include("free_scalar.jl")
 
 doublers= false
 blocksize = 3000
@@ -7,7 +8,8 @@ ratio = 5
 sample = 5000000
 Nt = 8
 Nt_b=Nt*ratio
-path== joinpath([ "..", "simulations_c", "Tequalsm"])
+path= "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
+cd(path)
 
 if doublers == false
     dfname = @sprintf("Tequals_ratio=%.iNt=%i_sample=%.1e.txt",ratio, Nt, sample)
@@ -33,7 +35,7 @@ obs1v_r = []
 
 
 fname= @sprintf("fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=1.00.txt", sample, ratio, Nt)
-w = open(joinpath([path, fname]), "r") do io
+w = open(fname, "r") do io
     readdlm(io, header = true)
 end
 
