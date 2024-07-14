@@ -1,20 +1,25 @@
 using ArgParse, DelimitedFiles, LinearAlgebra, Printf, Statistics
 include("free_scalar.jl")
 
+
 doublers= false
 blocksize = 3000
 therm = 10000
-ratio = 5
+ratio = 6
 sample = 5000000
-Nt = 8
+Nt = 6
 Nt_b=Nt*ratio
-path= "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
+if doublers == true
+    path= "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/doublers/"
+else
+    path= "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
+end
 cd(path)
 
 if doublers == false
     dfname = @sprintf("Tequals_ratio=%.iNt=%i_sample=%.1e.txt",ratio, Nt, sample)
 else 
-    dfname = @sprintf("doublers_Nt=%i_sample=%.1e.txt", Nt, sample)
+    dfname = @sprintf("data_doublers_sample=%.1eratio=%.iNt=%.i.txt", sample, ratio, Nt)
 end
 
 
@@ -33,8 +38,12 @@ obs1v_b = []
 obs1_r = []
 obs1v_r = []
 
+if doublers == false
+    fname= @sprintf("fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=1.00.txt", sample, ratio, Nt)
+else 
+    fname = @sprintf("doublers_sample=%.1eratio=%.iNt=%2.2iTonm=1.00.txt", sample, ratio, Nt)
+end
 
-fname= @sprintf("fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=1.00.txt", sample, ratio, Nt)
 w = open(fname, "r") do io
     readdlm(io, header = true)
 end
@@ -51,8 +60,12 @@ push!(obs1 , mean(O1_j))
 push!(obs1v , std(O1_j, corrected = false).*sqrt(length(O1_j)-1))
 
 
-       
-fname= @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=1.00.txt",  sample, ratio, Nt_b, Nt)
+if doublers == false       
+    fname= @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=1.00.txt",  sample, ratio, Nt_b, Nt)
+else
+    fname= @sprintf("doublers_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=1.00.txt",  sample, ratio, Nt_b, Nt)
+end
+
 w = open(joinpath([path, fname]), "r") do io
     readdlm(io, header = true)
 end

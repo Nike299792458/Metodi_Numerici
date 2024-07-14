@@ -1,8 +1,8 @@
-using CSV, DataFrames, DelimitedFiles, LaTeXStrings, Plots, Printf, Statistics
+using CSV, DataFrames, DelimitedFiles, LaTeXStrings, Plots, Printf, Statistics, LsqFit, LinearAlgebra
 
 
 default(fontfamily = "Computer Modern",
-background_color = :white,
+background_color = :transparent,
 foreground_color = :black,
 background_color_legend = nothing,
 margin=5Plots.mm
@@ -15,7 +15,7 @@ sample= 5000000
 
 
 
-doublers= false
+
 #=
 
 p1=plot()
@@ -65,38 +65,70 @@ savefig(p2, "o1suTsquared.png")
 #T=m  
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
 cd(path)
+
+
 p3=plot()
-
-
 ratio=[4,5,6]
 for (i,r) in enumerate(ratio)
-    
     fname= @sprintf("Tequals_ratio=%.i_sample=%.1e.txt", r, sample)
-    lines = readlines(fname)
     temporal_division=[5,6,8,10]
-    #Nt=[parse(Int64, split(line, ',')[1]) for line in lines[2:end]]
+    lines = readlines(fname)
     ϵ_norm=[parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
     ϵ_normv=[parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
+    
     x=temporal_division .^(-2)
-    scatter!(p3, x, ϵ_norm, yerr = ϵ_normv, markershape = :utriangle, label = "ratio=$r")  
+    
+
+    #fit
+    model(x, p) = p[1] .+ p[2] .* x
+    p0 = [0.0, 0.0]  
+    fit = curve_fit(model, x, ϵ_norm, ϵ_normv.^(-2), p0)  
+    scatter!(p3, x, ϵ_norm, yerr = ϵ_normv, markershape = :utriangle, label = "ratio=$r", xlabel = L"$\frac{1}{Nt^2}$", ylabel = L"$ϵ/T^2$")
+    title!(p3, L"$\frac{T}{m}=1$")
+    plot!(p3, x, model(x, coef(fit)), label = "Linear fit ratio=$r", lw=2)
+    best_fit_params = coef(fit)
+    J = fit.jacobian
+    cov_matrix = inv(J' * J)
+    param_errors = sqrt.(Diagonal(cov_matrix))
+    #println("Best fit parameters: ", best_fit_params)
+    #println("Parameter errors: ", param_errors)
+    
+    display(p3) 
 end
 
-display(p3)
+
+
 
 p4=plot()
-
-
 ratio=[5]
 for (i,r) in enumerate(ratio)
     
-    fname= @sprintf("Doublers_ratio=%.i_sample=%.1e.txt", r, sample)
+    fname= @sprintf("data_doublers_sample=%.1eratio=%.i.txt", sample, r)
     lines = readlines(fname)
-    temporal_division=[5,6,8,10]
+    temporal_division=[6,8,10]
     #Nt=[parse(Int64, split(line, ',')[1]) for line in lines[2:end]]
-    ϵ_norm=[parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
-    ϵ_normv=[parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
+    ϵ_norm=[parse(Float64, split(line, ',')[2]) for line in lines[3:end]]
+    ϵ_normv=[parse(Float64, split(line, ',')[3]) for line in lines[3:end]]
     x=temporal_division .^(-2)
-    scatter!(p4, x, ϵ_norm, yerr = ϵ_normv, markershape = :utriangle, label = "ratio=$r")  
+     
+    
+    #fit
+    model(x, p) = p[1] .+ p[2] .* x
+    p0 = [0.0, 0.0]  
+    fit = curve_fit(model, x, ϵ_norm, ϵ_normv.^(-2), p0)  
+    intercept, slope = coef(fit)
+  
+    p4 = scatter(x, ϵ_norm, yerr = ϵ_normv, markershape = :plus, label = "ratio=$r", xlabel = L"$\frac{1}{Nt^2}$", ylabel = L"$ϵ/T^2$")
+    title!(p4, L"$\frac{T}{m}=1$ wrong discretization")
+    plot!(p4, x, model(x, coef(fit)), label = "Linear fit", lw=2)
+    best_fit_params = coef(fit)
+    J = fit.jacobian
+    cov_matrix = inv(J' * J)
+    param_errors = sqrt.(Diagonal(cov_matrix))
+    #println("Best fit parameters: ", best_fit_params)
+    #println("Parameter errors: ", param_errors)
+    display(p4)
+    savefig(p4, "doublers.png")
 end
 
-display(p4)
+savefig(p3, "T=m.png")
