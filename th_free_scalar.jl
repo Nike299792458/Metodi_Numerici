@@ -19,7 +19,7 @@ function parse_cmd()
             arg_type = Int
         "--path", "-p"
             help = "The path where files are stored, if simulating T=m /../simulations_c/Tequalsm"
-            default = joinpath(["..", "simulations_c", "Nt=10"])
+            default = joinpath(["..", "simulations_c"])
             required = false
             arg_type = String
         
