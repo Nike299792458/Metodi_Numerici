@@ -41,7 +41,7 @@ function main()
     startp = @sprintf "spectrum_sample=%.1eNt=%i" sample Nt
     paths = filter(startswith(startp), readdir(path))
     Ns=60
-    mhat=0.3
+    mhat=1/3
     Tonm=1/(Nt*mhat)
     
     for fname in paths
@@ -55,11 +55,11 @@ function main()
 
         end
 
-        # Estrazione della matrice cormat
+        #Matrice di correlazione cormat
         cormat = w[1][therm+1:end,1:end] 
-        # Creazione dell'array datajack con le dimensioni adeguate
+        # Creazione dell'array datajack con le dimensioni di cormat
         datajack = zeros(size(cormat, 1) ÷ blocksize, size(cormat, 2))
-        # Popolamento di datajack usando la funzione JackKnife
+        # Popolamento di datajack 
         for i in 1:size(cormat, 2)
             datajack[:, i] = JackKnife(cormat[:, i], blocksize)
         end

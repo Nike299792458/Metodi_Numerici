@@ -7,30 +7,21 @@ foreground_color = :black,
 background_color_legend = nothing,
 margin=5Plots.mm
 )
+sample=5000000
 
+#T≠m 
+path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/"
+cd(path)
 
-
-sample= 5000000
-
-
-
-
-
-#=
-
-p1=plot()
-
-#T≠m
-# Definire un array di marker shapes
-marker_shapes = [ :cross, :cross, :cross]
-
-# Creiamo i plot principali
 p1 = plot()
 p2 = plot()
+marker_shapes = [ :cross, :cross, :cross]
+time_division=[4,8,10]
+ratio=5
 
 for (i, Nt) in enumerate(time_division)
     Nt_b = Nt * ratio
-    fname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
+    fname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e.txt", Nt, Nt_b, sample)
     lines = readlines(fname)
     Tonm = [parse(Float64, split(line, ',')[1]) for line in lines[2:end]]
     ϵ_norm = [parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
@@ -49,18 +40,17 @@ y1 = π / 6
 plot!(p1, [0, 2.5], [y1, y1], label = "continuum limit", lw = 2)
 
 xlabel!(p2, "T/m")
-ylabel!(p2, L"\frac{ϵ-P}{T^2}")
+ylabel!(p2, L"\frac{ϵ-p}{T^2}")
 title!(p2, "Temperature behavior")
 y2 = 0.1866571
 plot!(p2, [0, 2.5], [y2, y2], label = "continuum limit", lw = 2)
 
-# Visualizziamo i plot finali
+
 display(p1)
 display(p2)
 savefig(p1, "esuTsquared.png")
 savefig(p2, "o1suTsquared.png")
 
-=#
 
 #T=m  
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
@@ -90,13 +80,13 @@ for (i,r) in enumerate(ratio)
     J = fit.jacobian
     cov_matrix = inv(J' * J)
     param_errors = sqrt.(Diagonal(cov_matrix))
-    #println("Best fit parameters: ", best_fit_params)
-    #println("Parameter errors: ", param_errors)
+    println("Best fit parameters: ", best_fit_params)
+    println("Parameter errors: ", param_errors)
     
-    display(p3) 
+    
 end
-
-
+display(p3) 
+savefig(p3, "T=m.png")
 
 
 p4=plot()
@@ -125,10 +115,10 @@ for (i,r) in enumerate(ratio)
     J = fit.jacobian
     cov_matrix = inv(J' * J)
     param_errors = sqrt.(Diagonal(cov_matrix))
-    #println("Best fit parameters: ", best_fit_params)
-    #println("Parameter errors: ", param_errors)
+    println("Best fit parameters: ", best_fit_params)
+    println("Parameter errors: ", param_errors)
     display(p4)
     savefig(p4, "doublers.png")
 end
 
-savefig(p3, "T=m.png")
+

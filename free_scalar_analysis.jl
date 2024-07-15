@@ -32,7 +32,7 @@ function parse_cmd()
             required = false
             arg_type = Bool
         "--path", "-p"
-            help = "The path where files are stored, if simulating T=m /../simulations_c/Tequalsm"
+            help = "The path where files are stored"
             default = joinpath([ "..", "simulations_c"])
             required = false
             arg_type = String
@@ -53,7 +53,6 @@ function main()
     
    
     startp = @sprintf "fs_th_sample=%.1eratio=%.iNt=%2.2iTonm=" sample ratio Nt 
-    #startp = @sprintf "doublers_sample=%.1eratio=%.iNt=%2.2iTonm=" sample ratio Nt 
     paths = filter(startswith(startp), readdir(path))
     Tonm = []
     ϵ_norm_j=[]
@@ -95,9 +94,8 @@ function main()
 
     end
 
-    dfname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e_doublers=%i.txt", Nt, Nt_b, sample, doublers)
-    startp = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=" ,sample, ratio, Nt_b, Nt) 
-    #startp = @sprintf("doublers_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=" ,sample, ratio, Nt_b, Nt) 
+    dfname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e%i.txt", Nt, Nt_b, sample)
+    startp = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=" ,sample, ratio, Nt_b, Nt)  
     paths = filter(startswith(startp), readdir(path))
     for (i,fname) in enumerate(paths)
         T_norm= parse(Float64, fname[end-7:end-4]) 

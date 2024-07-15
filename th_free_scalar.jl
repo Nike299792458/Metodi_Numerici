@@ -34,7 +34,7 @@ function main()
     sample = parsed_args["sample"]
     path = parsed_args["path"]
 
-    #simulation parameters (T/m independant)
+    #simulation parameters 
     Ns=ratio*Nt
     stvol=Nt #stvol=Nt*Ns^{STDIM-1}
     for i in 1:(STDIM-1)
@@ -53,8 +53,8 @@ function main()
     measevery = 10
 
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
-    Tonm =[1.0] #when simulating T=m
-    #Tonm = collect(range(0.1, stop=2.5, length=16)) #Otherwise
+    #Tonm =[1.0] #when simulating T=m
+    Tonm = collect(range(0.1, stop=2.5, length=16)) #Otherwise
     for T_norm in Tonm
         # initializing...
         lattice = zeros(Float64, Nt ,Ns)
@@ -70,8 +70,8 @@ function main()
         if !isfile(fr)
             touch(fr)
         end
+
         # writing header
-        
         open(fr, "w") do infile
             writedlm(infile, ["obs1" "obs2" "obs3"], " ")
         end
@@ -108,6 +108,7 @@ function main()
         if !isfile(fr)
             touch(fr)
         end
+        
         # writing header
         open(fr, "w") do infile
             writedlm(infile, ["obs1_b" "obs2_b" "obs3_b"], " ")

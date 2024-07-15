@@ -33,7 +33,7 @@ function main()
     verbose = parsed_args["verbose"]
     Ns=60
     mhat=1/3 #mhat<1
-    Tonm=1/(Nt*mhat)#devo andare a T basse per stare sul fondamentale
+    Tonm=1/(Nt*mhat)#devo andare a T basse per stare sul fondamentale in questo modo T/m = 1/20
     # initializing...
     lattice = zeros(Float64, Nt, Ns)
     acc = 0.
