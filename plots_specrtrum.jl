@@ -1,7 +1,7 @@
 using  DataFrames, DelimitedFiles, LaTeXStrings, Plots, Printf, Statistics, LsqFit, LinearAlgebra
 
 default(fontfamily = "Computer Modern",
-background_color = :transparent,
+background_color = :white,
 foreground_color = :black,
 background_color_legend = nothing,
 margin=5Plots.mm

@@ -26,14 +26,9 @@ function parse_cmd()
             help = "the number of points in a block"
             required = true
             arg_type = Int
-        "doublers"
-            help= "if we're simulating with wrong discretization"  
-            default = false
-            required = false
-            arg_type = Bool
         "--path", "-p"
             help = "The path where files are stored"
-            default = joinpath([ "..", "simulations_c"])
+            default = joinpath([ "..", "simulations_c", "Nt=10"])
             required = false
             arg_type = String
     end
@@ -43,7 +38,6 @@ end
 function main()
     parsed_args = parse_cmd()
     path = parsed_args["path"]
-    doublers= parsed_args["doublers"]
     blocksize = parsed_args["blocksize"]
     therm = parsed_args["therm"]
     ratio = parsed_args["ratio"]
@@ -94,7 +88,7 @@ function main()
 
     end
 
-    dfname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e%i.txt", Nt, Nt_b, sample)
+    dfname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e.txt", Nt, Nt_b, sample)
     startp = @sprintf("fs_th_sample=%.1eratio=%.iNt_b=%2.2iNt=%2.2iTonm=" ,sample, ratio, Nt_b, Nt)  
     paths = filter(startswith(startp), readdir(path))
     for (i,fname) in enumerate(paths)
@@ -118,9 +112,11 @@ function main()
 
     end
     ϵ_norm_r = ϵ_norm - ϵ_norm_b
-    ϵ_normv_r = sqrt.((ϵ_normv ./ ϵ_norm).^2 .+ (ϵ_normv_b ./ ϵ_norm_b).^2) .* ϵ_norm_r
+    #ϵ_normv_r = sqrt.((ϵ_normv ./ ϵ_norm).^2 .+ (ϵ_normv_b ./ ϵ_norm_b).^2) .* ϵ_norm_r
+    ϵ_normv_r= ϵ_normv + ϵ_normv_b
     obs1_r= obs1 - obs1_b
-    obs1v_r = sqrt.((obs1v ./ obs1).^2 .+ (obs1v_b ./ obs1_b).^2) .* obs1_r
+    #obs1v_r = sqrt.((obs1v ./ obs1).^2 .+ (obs1v_b ./ obs1_b).^2) .* obs1_r
+    obs1v_r= obs1v + obs1v_b
     println(ϵ_norm_r)
     println(ϵ_normv_r)
 

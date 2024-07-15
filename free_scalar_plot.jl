@@ -2,7 +2,7 @@ using CSV, DataFrames, DelimitedFiles, LaTeXStrings, Plots, Printf, Statistics, 
 
 
 default(fontfamily = "Computer Modern",
-background_color = :transparent,
+background_color = :white,
 foreground_color = :black,
 background_color_legend = nothing,
 margin=5Plots.mm
@@ -51,7 +51,7 @@ display(p2)
 savefig(p1, "esuTsquared.png")
 savefig(p2, "o1suTsquared.png")
 
-
+#=
 #T=m  
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
 cd(path)
@@ -121,4 +121,4 @@ for (i,r) in enumerate(ratio)
     savefig(p4, "doublers.png")
 end
 
-
+=#
