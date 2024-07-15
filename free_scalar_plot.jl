@@ -10,12 +10,12 @@ margin=5Plots.mm
 sample=5000000
 
 #T≠m 
-path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/"
+path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
 
 p1 = plot()
 p2 = plot()
-marker_shapes = [ :cross, :cross, :cross]
+marker_shapes = [ :cross, :dot, :utriangle]
 time_division=[4,8,10]
 ratio=5
 

@@ -50,13 +50,20 @@ function main()
 
     #generic
     orsteps = 5
-    measevery = 10
+    measevery = 5
 
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
     #Tonm =[1.0] #when simulating T=m
-    Tonm = collect(range(0.1, stop=2.5, length=16)) #Otherwise
+    #Tonm = collect(range(0.1, stop=2.5, length=16)) #Otherwise
+    if Nt==8
+        Tonm =[1.70]
+    else
+        Tonm=[1.54,2.50]
+    end 
+
     for T_norm in Tonm
         # initializing...
+        #=
         lattice = zeros(Float64, Nt ,Ns)
         acc=0
         mhat=1/(Nt*T_norm)
@@ -95,7 +102,7 @@ function main()
             
         end
         close(datafile)
-     
+     =#
         lattice_b = zeros(Float64, Nt_b, Ns_b)
         acc = 0
 
