@@ -58,11 +58,11 @@ function main()
     
     for T_norm in Tonm
         # initializing...
-        #=
+       
         lattice = zeros(Float64, Nt ,Ns)
         acc=0
         mhat=1/(Nt*T_norm)
-        
+         #=
         # files management
         if !isdir(path)
             mkpath(path)
