@@ -44,7 +44,7 @@ println("Parameter errors: ", param_errors)
 
 # Grafico dei dati e della linea di regressione
 scatter!(p1, t_dist[1:10], gap[1:10], yerror= gapv[1:10],markershape=:plus,label ="data" )
-plot!(p1, t_dist, model(t_dist, coef(fit)), label=L"y =  0.9956 $\pm$ 0.0003)", color=:red)
+plot!(p1, t_dist, model(t_dist, coef(fit)), label=L"y =  0.9956 $\pm$ 0.0004)", color=:red)
 xlabel!(p1,"spacing")
 ylabel!(p1,L"\frac{gap}{\hat{m}}")
 title!("Fit of normalized Energy Gap vs Correlators Spacing")

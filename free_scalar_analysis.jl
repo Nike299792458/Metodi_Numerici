@@ -113,7 +113,6 @@ function main()
     end
     ϵ_norm_r = ϵ_norm - ϵ_norm_b
     ϵ_normv_r = sqrt.((ϵ_normv ./ ϵ_norm).^2 .+ (ϵ_normv_b ./ ϵ_norm_b).^2) .* ϵ_norm_r
-    
     obs1_r= obs1 - obs1_b
     obs1v_r = sqrt.((obs1v ./ obs1).^2 .+ (obs1v_b ./ obs1_b).^2) .* obs1_r
     

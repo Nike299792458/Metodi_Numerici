@@ -1,69 +1,86 @@
 using CSV, DataFrames, DelimitedFiles, LaTeXStrings, Plots, Printf, Statistics, LsqFit, LinearAlgebra
 
-
-default(fontfamily = "Computer Modern",
-background_color = :transparent,
-foreground_color = :black,
-background_color_legend = nothing,
-margin=5Plots.mm
+default(
+    fontfamily = "Computer Modern",
+    background_color = :white,
+    foreground_color = :black,
+    background_color_legend = nothing,
+    margin = 5Plots.mm
 )
-sample=5000000
 
+sample = 5000000
 
-#T≠m 
+# T ≠ m
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
 
 plots = []
 p2 = plot()
-marker_shapes = [ :cross, :dot, :utriangle]
-time_division=[4,8,10]
-ratio=5
+marker_shapes = [:cross, :cross, :cross]
+time_division = [4,8,10]
+ratio = 5
 
 for (i, Nt) in enumerate(time_division)
     Nt_b = Nt * ratio
     fname = @sprintf("data_Nt=%2.2i_Nt_b=%2.2i_sample=%.1e.txt", Nt, Nt_b, sample)
-    lines = readlines(fname)
-    Tonm = [parse(Float64, split(line, ',')[1]) for line in lines[2:end]]
-    ϵ_norm = [parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
-    ϵ_normv = [parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
-    obs1_r = [parse(Float64, split(line, ',')[4]) for line in lines[2:end]]
-    obs1v_r = [parse(Float64, split(line, ',')[5]) for line in lines[2:end]]
+    if isfile(fname)
+        lines = readlines(fname)
+        if length(lines) > 2
+            Tonm = [parse(Float64, split(line, ',')[1]) for line in lines[2:end]]
+            ϵ_norm = [parse(Float64, split(line, ',')[2]) for line in lines[2:end]]
+            ϵ_normv = [parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
+            obs1_r = [parse(Float64, split(line, ',')[4]) for line in lines[2:end]]
+            obs1v_r = [parse(Float64, split(line, ',')[5]) for line in lines[2:end]]
 
-    p = plot()
-    scatter!(p, Tonm, ϵ_norm, yerr = ϵ_normv, markershape = marker_shapes[i], label = "Nt=$Nt")
-    scatter!(p2, Tonm, obs1_r, yerr = obs1v_r, markershape = marker_shapes[i], label = "Nt=$Nt")
-    push!(plots, p)
+            p = plot()
+            scatter!(p2, Tonm, ϵ_norm, yerr = ϵ_normv, markershape = marker_shapes[i], label = "Nt=$Nt")
+            scatter!(p, Tonm, obs1_r, yerr = obs1v_r, markershape = marker_shapes[i], label = "Nt=$Nt")
+            push!(plots, p)
+        else
+            println("File $fname does not contain enough data.")
+        end
+    else
+        println("File $fname not found.")
+    end
+
+
+
+
+    
+
 end
-   
-xlabel!("T/m")
-ylabel!(L"\frac{ϵ}{T^2}")
-title!("Temperature behavior")
-
-
-plot!(plots[1], plots[2], plots[3], [0, 2.5], [y1, y1], label = "continuum limit", lw = 2)
 # Combine all plots into a single figure with subplots
-combined_plot = plot(plots..., layout = (3, 1), size = (800, 1200))
 
+
+combined_plot = plot(plots..., layout = (length(plots), 1), size = (800, 1200))
+
+  
 # Add the horizontal line to each subplot
-y1 = π / 6
 for p in plots
-    plot!(p, [0, 2.5], [y1, y1], label = "continuum limit", lw = 2)
+    local y1 = 0.1866571
+    xlabel!("T/m")
+    ylabel!(L"\frac{ϵ-p}{T^2}")
+    title!("Temperature behavior")
+    plot!(p, [0, 2.5], [y1, y1], label = "high temerature limit", lw = 2)
+    combined_plot = plot(plots..., layout = (length(plots), 1), size = (800, 1200))
+    display(combined_plot)
 end
 
-display(combined_plot)
+
+
+
+# Save combined plot
+savefig(combined_plot, "o1suTsquared.png")
 
 xlabel!(p2, "T/m")
-ylabel!(p2, L"\frac{ϵ-p}{T^2}")
-title!(p2, "Temperature behavior")
-y2 = 0.1866571
+ylabel!(p2, L"\frac{ϵ}{T^2}")
+title!(p2, "Temperature behavior ")
+y2 = π / 6
 plot!(p2, [0, 2.5], [y2, y2], label = "continuum limit", lw = 2)
 
-
-
 display(p2)
-savefig(p, "esuTsquared.png")
-savefig(p2, "o1suTsquared.png")
+savefig(p2, "ϵsuTsquared.png")
+
 
 #=
 #T=m  

@@ -19,7 +19,7 @@ function parse_cmd()
             arg_type = Int
         "--path", "-p"
             help = "The path where files are stored, if simulating T=m /../simulations_c/Tequalsm"
-            default = joinpath(["..", "simulations_c", "Nt=10"])
+            default = joinpath(["..", "simulations_c"])
             required = false
             arg_type = String
         
@@ -53,7 +53,7 @@ function main()
     measevery = 5
 
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
-    Tonm =[1.70] #when simulating T=m
+    Tonm =[1.70, 2.34] #when simulating T=m
     #Tonm = collect(range(0.1, stop=2.5, length=16)) #Otherwise
     
     for T_norm in Tonm
@@ -62,7 +62,7 @@ function main()
         lattice = zeros(Float64, Nt ,Ns)
         acc=0
         mhat=1/(Nt*T_norm)
-         #=
+      #=   
         # files management
         if !isdir(path)
             mkpath(path)
