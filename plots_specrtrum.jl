@@ -29,8 +29,8 @@ savefig(p, "gaps.png")
 
 # Fit
 p1 = plot(legend=:best, dpi=600)
-model(x, p) = p[1] .+ p[2] .* x
-p0 = [0.0, 0.0]
+model(x, p) = p[1] .+ 0 .* x
+p0 = [0.0]
 fit = curve_fit(model, t_dist, gap, gapv.^(-2), p0)
 best_fit_params =coef(fit)
 #mass = -slope

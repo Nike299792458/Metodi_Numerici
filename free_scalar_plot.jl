@@ -2,18 +2,19 @@ using CSV, DataFrames, DelimitedFiles, LaTeXStrings, Plots, Printf, Statistics, 
 
 
 default(fontfamily = "Computer Modern",
-background_color = :white,
+background_color = :transparent,
 foreground_color = :black,
 background_color_legend = nothing,
 margin=5Plots.mm
 )
 sample=5000000
 
+
 #T≠m 
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c"
 cd(path)
 
-p1 = plot()
+plots = []
 p2 = plot()
 marker_shapes = [ :cross, :dot, :utriangle]
 time_division=[4,8,10]
@@ -28,16 +29,29 @@ for (i, Nt) in enumerate(time_division)
     ϵ_normv = [parse(Float64, split(line, ',')[3]) for line in lines[2:end]]
     obs1_r = [parse(Float64, split(line, ',')[4]) for line in lines[2:end]]
     obs1v_r = [parse(Float64, split(line, ',')[5]) for line in lines[2:end]]
-    
-    scatter!(p1, Tonm, ϵ_norm, yerr = ϵ_normv, markershape = marker_shapes[i], label = "Nt=$Nt")
+
+    p = plot()
+    scatter!(p, Tonm, ϵ_norm, yerr = ϵ_normv, markershape = marker_shapes[i], label = "Nt=$Nt")
     scatter!(p2, Tonm, obs1_r, yerr = obs1v_r, markershape = marker_shapes[i], label = "Nt=$Nt")
+    push!(plots, p)
+end
+   
+xlabel!("T/m")
+ylabel!(L"\frac{ϵ}{T^2}")
+title!("Temperature behavior")
+
+
+plot!(plots[1], plots[2], plots[3], [0, 2.5], [y1, y1], label = "continuum limit", lw = 2)
+# Combine all plots into a single figure with subplots
+combined_plot = plot(plots..., layout = (3, 1), size = (800, 1200))
+
+# Add the horizontal line to each subplot
+y1 = π / 6
+for p in plots
+    plot!(p, [0, 2.5], [y1, y1], label = "continuum limit", lw = 2)
 end
 
-xlabel!(p1, "T/m")
-ylabel!(p1, L"\frac{ϵ}{T^2}")
-title!(p1, "Temperature behavior")
-y1 = π / 6
-plot!(p1, [0, 2.5], [y1, y1], label = "continuum limit", lw = 2)
+display(combined_plot)
 
 xlabel!(p2, "T/m")
 ylabel!(p2, L"\frac{ϵ-p}{T^2}")
@@ -46,9 +60,9 @@ y2 = 0.1866571
 plot!(p2, [0, 2.5], [y2, y2], label = "continuum limit", lw = 2)
 
 
-display(p1)
+
 display(p2)
-savefig(p1, "esuTsquared.png")
+savefig(p, "esuTsquared.png")
 savefig(p2, "o1suTsquared.png")
 
 #=
@@ -57,7 +71,7 @@ path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequal
 cd(path)
 
 
-p3=plot()
+p3 = plot(legend=:best, dpi=600)
 ratio=[4,5,6]
 for (i,r) in enumerate(ratio)
     fname= @sprintf("Tequals_ratio=%.i_sample=%.1e.txt", r, sample)
@@ -74,9 +88,9 @@ for (i,r) in enumerate(ratio)
     p0 = [0.0, 0.0]  
     fit = curve_fit(model, x, ϵ_norm, ϵ_normv.^(-2), p0)  
     scatter!(p3, x, ϵ_norm, yerr = ϵ_normv, markershape = :utriangle, label = "ratio=$r", xlabel = L"$\frac{1}{Nt^2}$", ylabel = L"$ϵ/T^2$")
-    title!(p3, L"$\frac{T}{m}=1$")
-    plot!(p3, x, model(x, coef(fit)), label = "Linear fit ratio=$r", lw=2)
     best_fit_params = coef(fit)
+    lnsp=[0,0.04]
+    plot!(p3, lnsp, model(lnsp, coef(fit)), label = "Linear fit ratio=$r", lw=2)
     J = fit.jacobian
     cov_matrix = inv(J' * J)
     param_errors = sqrt.(Diagonal(cov_matrix))
@@ -85,11 +99,14 @@ for (i,r) in enumerate(ratio)
     
     
 end
+title!(p3, L"$\frac{T}{m}=1$")
+y1= 0.406123
+plot!(p3, [0, 0.045], [y1, y1], label = "continuum limit", lw = 2)
 display(p3) 
 savefig(p3, "T=m.png")
 
 
-p4=plot()
+p4 = plot(legend=:best, dpi=600)
 ratio=[5]
 for (i,r) in enumerate(ratio)
     
@@ -109,8 +126,11 @@ for (i,r) in enumerate(ratio)
     intercept, slope = coef(fit)
   
     p4 = scatter(x, ϵ_norm, yerr = ϵ_normv, markershape = :plus, label = "ratio=$r", xlabel = L"$\frac{1}{Nt^2}$", ylabel = L"$ϵ/T^2$")
+    y1= 4*0.406123
+    plot!(p4, [0, 0.045], [y1, y1], label = "continuum limit", lw = 2)
     title!(p4, L"$\frac{T}{m}=1$ wrong discretization")
-    plot!(p4, x, model(x, coef(fit)), label = "Linear fit", lw=2)
+    lnsp=[0,0.04]
+    plot!(p4, lnsp, model(lnsp, coef(fit)), label = "Linear fit", lw=2)
     best_fit_params = coef(fit)
     J = fit.jacobian
     cov_matrix = inv(J' * J)

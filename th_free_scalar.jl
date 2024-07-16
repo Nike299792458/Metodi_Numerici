@@ -19,7 +19,7 @@ function parse_cmd()
             arg_type = Int
         "--path", "-p"
             help = "The path where files are stored, if simulating T=m /../simulations_c/Tequalsm"
-            default = joinpath(["..", "simulations_c"])
+            default = joinpath(["..", "simulations_c", "Nt=10"])
             required = false
             arg_type = String
         
@@ -53,7 +53,7 @@ function main()
     measevery = 5
 
     println(@sprintf "Starting simulation: sample=%.1e ratio=%.i Nt=%.i " sample ratio Nt )
-    Tonm =[2.50] #when simulating T=m
+    Tonm =[1.54] #when simulating T=m
     #Tonm = collect(range(0.1, stop=2.5, length=16)) #Otherwise
     
     for T_norm in Tonm
