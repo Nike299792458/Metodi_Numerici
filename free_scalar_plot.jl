@@ -2,7 +2,7 @@ using CSV, DataFrames, DelimitedFiles, LaTeXStrings, Plots, Printf, Statistics, 
 
 default(
     fontfamily = "Computer Modern",
-    background_color = :white,
+    background_color = :transparent,
     foreground_color = :black,
     background_color_legend = nothing,
     margin = 5Plots.mm

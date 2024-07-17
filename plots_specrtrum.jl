@@ -1,7 +1,7 @@
 using  DataFrames, DelimitedFiles, LaTeXStrings, Plots, Printf, Statistics, LsqFit, LinearAlgebra
 
 default(fontfamily = "Computer Modern",
-background_color = :white,
+background_color = :transparent,
 foreground_color = :black,
 background_color_legend = nothing,
 margin=5Plots.mm
@@ -33,18 +33,17 @@ model(x, p) = p[1] .+ 0 .* x
 p0 = [0.0]
 fit = curve_fit(model, t_dist, gap, gapv.^(-2), p0)
 best_fit_params =coef(fit)
-#mass = -slope
 J = fit.jacobian
 cov_matrix = inv(J' * J)
 param_errors = sqrt.(Diagonal(cov_matrix))
 # Stampa i risultati
 println("Best fit Parameters ",best_fit_params )
 println("Parameter errors: ", param_errors)
-#println("Massa (unità di reticolo): $mass")
 
-# Grafico dei dati e della linea di regressione
+
+# Grafico dei dati e del fit
 scatter!(p1, t_dist[1:10], gap[1:10], yerror= gapv[1:10],markershape=:plus,label ="data" )
-plot!(p1, t_dist, model(t_dist, coef(fit)), label=L"y =  0.9956 $\pm$ 0.0004)", color=:red)
+plot!(p1, t_dist, model(t_dist, coef(fit)), label=L"y =  0.9951 $\pm$ 0.0004)", color=:violet)
 xlabel!(p1,"spacing")
 ylabel!(p1,L"\frac{gap}{\hat{m}}")
 title!("Fit of normalized Energy Gap vs Correlators Spacing")
