@@ -2,7 +2,7 @@ using ArgParse, DelimitedFiles, LinearAlgebra, Printf, Statistics
 include("free_scalar.jl")
 
 
-doublers= false
+doublers= false #true if simulating with wrong discretization
 blocksize = 3000
 therm = 10000
 ratio = 6

@@ -28,7 +28,7 @@ function parse_cmd()
             arg_type = Int
         "--path", "-p"
             help = "The path where files are stored"
-            default = joinpath([ "..", "simulations_c", "Nt=8"])
+            default = joinpath([ "..", "simulations_c"])
             required = false
             arg_type = String
     end

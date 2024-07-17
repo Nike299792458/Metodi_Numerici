@@ -33,8 +33,10 @@ for (i, Nt) in enumerate(time_division)
             obs1v_r = [parse(Float64, split(line, ',')[5]) for line in lines[2:end]]
 
             p = plot()
+            local y1 = 0.1866571
             scatter!(p2, Tonm, ϵ_norm, yerr = ϵ_normv, markershape = marker_shapes[i], label = "Nt=$Nt")
             scatter!(p, Tonm, obs1_r, yerr = obs1v_r, markershape = marker_shapes[i], label = "Nt=$Nt")
+            plot!(p, [0.9, 1.1], [y1, y1], label = "theoretical value for T=m", lw = 2)
             push!(plots, p)
         else
             println("File $fname does not contain enough data.")
@@ -43,31 +45,20 @@ for (i, Nt) in enumerate(time_division)
         println("File $fname not found.")
     end
 
-
-
-
-    
-
 end
 # Combine all plots into a single figure with subplots
-
-
 combined_plot = plot(plots..., layout = (length(plots), 1), size = (800, 1200))
 
-  
-# Add the horizontal line to each subplot
 for p in plots
-    local y1 = 0.1866571
+   
     xlabel!("T/m")
     ylabel!(L"\frac{ϵ-p}{T^2}")
     title!("Temperature behavior")
-    plot!(p, [0, 2.5], [y1, y1], label = "high temerature limit", lw = 2)
-    combined_plot = plot(plots..., layout = (length(plots), 1), size = (800, 1200))
-    display(combined_plot)
+    
 end
 
 
-
+display(combined_plot)
 
 # Save combined plot
 savefig(combined_plot, "o1suTsquared.png")
@@ -76,13 +67,13 @@ xlabel!(p2, "T/m")
 ylabel!(p2, L"\frac{ϵ}{T^2}")
 title!(p2, "Temperature behavior ")
 y2 = π / 6
-plot!(p2, [0, 2.5], [y2, y2], label = "continuum limit", lw = 2)
+plot!(p2, [0, 2.5], [y2, y2], label = "high temerature limit", lw = 2)
 
 display(p2)
 savefig(p2, "ϵsuTsquared.png")
 
 
-#=
+
 #T=m  
 path = "/Users/nicoletognetti/uni/Magistrale/MetodiNumerici/simulations_c/Tequalsm/"
 cd(path)
@@ -158,4 +149,4 @@ for (i,r) in enumerate(ratio)
     savefig(p4, "doublers.png")
 end
 
-=#
+
